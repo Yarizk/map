@@ -1,5 +1,5 @@
 const express = require("express");
-const Note = require("../models/noteModels");
+//const coordinates = require("../models/baseModels");
 const router = express.Router();
 
 router.route("/save").post((req, res) => {

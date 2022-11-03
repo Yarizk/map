@@ -13,7 +13,7 @@ const cors = require('cors');
 app.use(cors());
 
 //routes
-const routes = require('./routes');
+const routes = require('./routes/router');
 app.use('/', routes);
 
 //listen
