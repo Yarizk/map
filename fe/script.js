@@ -79,11 +79,16 @@ function draw() {
       drawPolygon(polygonArray);
     } else if (rectangle == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-      rectangleArray.push(store);
+
       if(store[1] != undefined){
+        
+        rectangleArray.push(store);
+        console.log(rectangleArray)
+        
+        drawRectangle(store);
         store = [];
       }
-      drawRectangle(rectangleArray);
+      
     } else if (circle == true) {
       var circleOptions = {
         color: "red",
