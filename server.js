@@ -13,15 +13,8 @@ const cors = require('cors');
 app.use(cors());
 
 //routes
-// const routes = require('./routes');
-// app.use('/', routes);
-
-//get data from /save
-app.post('/save', (req, res) => {
-    console.log(req.body);
-    res.send('success');
-});
-
+const routes = require('./routes');
+app.use('/', routes);
 
 //listen
 app.listen(port, () => console.log(`App listening on port ${port}!`));
