@@ -1,6 +1,3 @@
-//import axios
-
-
 var map = L.map("map", {
   crs: L.CRS.Simple,
   minZoom: 0,
@@ -9,7 +6,8 @@ var map = L.map("map", {
   maxBounds: [
     [-50, -20],
     [1000, 1600],
-  ]});
+  ],
+});
 var bounds = [
   [0, 0],
   [1000, 1500],
@@ -19,6 +17,7 @@ map.fitBounds(bounds);
 var layerGroup = L.layerGroup().addTo(map);
 
 function choose() {
+  store = [];
   var ele = document.getElementsByName("choose");
   for (i = 0; i < ele.length; i++) {
     if (!ele[i].checked) {
@@ -62,13 +61,14 @@ function save() {
     })
     .catch((err) => {
       console.log(err);
-    });}
+    });
+}
 
 function draw() {
   map.on("click", function (e) {
     if (line == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-      lineArray.push(store)
+      lineArray.push(store);
       drawLine(lineArray);
     } else if (marker == true) {
       markerArray.push([e.latlng.lat, e.latlng.lng]);
@@ -80,15 +80,12 @@ function draw() {
     } else if (rectangle == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
 
-      if(store[1] != undefined){
-        
+      if (store[1] != undefined) {
         rectangleArray.push(store);
-        console.log(rectangleArray)
-        
+        console.log(rectangleArray);
         drawRectangle(store);
         store = [];
       }
-      
     } else if (circle == true) {
       var circleOptions = {
         color: "red",
@@ -111,7 +108,7 @@ function drawPolygon(array) {
 function drawRectangle(array) {
   var rectangle = L.rectangle(array, { color: "red" }).addTo(map);
   rectangle.addTo(layerGroup);
-} 
+}
 
 // //different style markers
 // var myIcon = L.icon({
@@ -124,24 +121,23 @@ function drawRectangle(array) {
 //   shadowAnchor: [22, 94],
 // });
 
-//get data with axios with async await
-async function load() {
-  const res = await axios.get("http://localhost:3000/load");
-  console.log(res.data);
-  var data = res.data;
-  for (var i = 0; i < data.marker.length; i++) {
-    L.marker(data.marker[i], { icon: myIcon }).addTo(map);
+//get data with axios async await
+async function get() {
+  const response = await axios.get("http://localhost:3000/get");
+  const data = response.data;
+  console.log(data);
+  for (let j = 0; j < data.length; j++) {
+    for (let i = 0; i < data[j].marker.length; i++) {
+      L.marker(data[j].marker[i]).addTo(map);
+    }
+    for (let i = 0; i < data[j].line.length; i++) {
+      drawLine(data[j].line[i]);
+    }
+    for (let i = 0; i < data[j].polygon.length; i++) {
+      drawPolygon(data[j].polygon[i]);
+    }
+    for (let i = 0; i < data[j].rectangle.length; i++) {
+      drawRectangle(data[j].rectangle[i]);
+    }
   }
-  for (var i = 0; i < data.line.length; i++) {
-    lineArray.push(data.line[i]);
-  }
-  drawLine(lineArray);
-  for (var i = 0; i < data.polygon.length; i++) {
-    polygonArray.push(data.polygon[i]);
-  }
-  drawPolygon(polygonArray);
-  for (var i = 0; i < data.rectangle.length; i++) {
-    rectangleArray.push(data.rectangle[i]);
-  }
-  drawRectangle(rectangleArray);
 }
