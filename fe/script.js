@@ -1,3 +1,6 @@
+//import axios
+
+
 var map = L.map("map", {
   crs: L.CRS.Simple,
   minZoom: 0,
@@ -11,9 +14,8 @@ var bounds = [
   [0, 0],
   [1000, 1500],
 ];
-var image = L.imageOverlay("/assets/2.jpg", bounds).addTo(map);
+var image = L.imageOverlay("2.jpg", bounds).addTo(map);
 map.fitBounds(bounds);
-
 var layerGroup = L.layerGroup().addTo(map);
 
 function choose() {
@@ -30,8 +32,36 @@ function choose() {
 
 var lineArray = [],
   polygonArray = [],
-  rectangleArray = [];
+  rectangleArray = [],
+  markerArray = [];
 var hand, line, marker, polygon, rectangle, circle;
+
+function reset() {
+  layerGroup.clearLayers();
+  lineArray = [];
+  polygonArray = [];
+  rectangleArray = [];
+}
+
+
+
+//post data with axios
+function save() {
+  var data = {
+    marker: markerArray,
+    line: lineArray,
+    polygon: polygonArray,
+    rectangle: rectangleArray,
+  };
+  console.log(data);
+  axios
+    .post("http://localhost:3000/save", data)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });}
 
 function draw() {
   map.on("click", function (e) {
@@ -39,6 +69,7 @@ function draw() {
       lineArray.push([e.latlng.lat, e.latlng.lng]);
       drawLine(lineArray);
     } else if (marker == true) {
+      markerArray.push([e.latlng.lat, e.latlng.lng]);
       L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
     } else if (polygon == true) {
       polygonArray.push([e.latlng.lat, e.latlng.lng]);
@@ -68,4 +99,4 @@ function drawPolygon(array) {
 function drawRectangle(array) {
   var rectangle = L.rectangle(array, { color: "red" }).addTo(map);
   rectangle.addTo(layerGroup);
-}
+} 
