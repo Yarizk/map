@@ -100,16 +100,16 @@ function drawRectangle(array) {
   rectangle.addTo(layerGroup);
 } 
 
-//different style markers
-var myIcon = L.icon({
-  iconUrl: "marker.png",
-  iconSize: [38, 95],
-  iconAnchor: [22, 94],
-  popupAnchor: [-3, -76],
-  shadowUrl: "marker-shadow.png",
-  shadowSize: [68, 95],
-  shadowAnchor: [22, 94],
-});
+// //different style markers
+// var myIcon = L.icon({
+//   iconUrl: "marker.png",
+//   iconSize: [38, 95],
+//   iconAnchor: [22, 94],
+//   popupAnchor: [-3, -76],
+//   shadowUrl: "marker-shadow.png",
+//   shadowSize: [68, 95],
+//   shadowAnchor: [22, 94],
+// });
 
 //get data with axios with async await
 async function load() {

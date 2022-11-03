@@ -1,5 +1,5 @@
 const express = require("express");
-const coordinates = require("../models/baseModels");
+//const coordinates = require("../models/baseModels");
 const router = express.Router();
 
 // router.route("/save").post((req, res) => {
@@ -11,7 +11,12 @@ const router = express.Router();
 
 //save data to mongodb
 router.route("/save").post((req, res) => {
-    const coordinates = new coordinates(req.body);
+    const coordinates = new coordinates({
+        marker: req.body.marker,
+        line: req.body.line,
+        polygon: req.body.polygon,
+        rectangle: req.body.rectangle
+    });
     coordinates
         .save()
         .then((data) => {
