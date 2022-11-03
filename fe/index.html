@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+    integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+    crossorigin=""/>
+    <link rel="stylesheet" href="/style.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+    integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+    crossorigin=""></script>
+</head>
+<body>
+    <div id="map" ></div>
+    <input type="radio" name="choose" value="hand"onchange="choose()">
+    <label for="Hand">Hand</label>
+    <input type="radio" name="choose" value="marker"onchange="choose()">
+    <label for="Markers">Markers</label><br>
+    <input type="radio" name="choose" value="line"onchange="choose()">
+    <label for="Polyline">Polyline</label><br>
+    <input type="radio" name="choose" value="polygon"onchange="choose()">
+    <label for="Polyline">polygon</label><br>
+    <input type="radio" name="choose" value="rectangle"onchange="choose()">
+    <label for="Polyline">rectangle</label><br>
+    <input type="radio" name="choose" value="circle"onchange="choose()">
+    <label for="Polyline">circle</label><br>
+
+</body>
+<script src="script.js">
+
+
+</script>
+</html>
