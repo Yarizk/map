@@ -34,6 +34,7 @@ var lineArray = [],
   polygonArray = [],
   rectangleArray = [],
   markerArray = [];
+var store = [];
 var hand, line, marker, polygon, rectangle, circle;
 
 function reset() {
@@ -46,6 +47,7 @@ function reset() {
 
 //post data with axios
 function save() {
+  store = [];
   var data = {
     marker: markerArray,
     line: lineArray,
@@ -65,16 +67,22 @@ function save() {
 function draw() {
   map.on("click", function (e) {
     if (line == true) {
-      lineArray.push([e.latlng.lat, e.latlng.lng]);
+      store.push([e.latlng.lat, e.latlng.lng]);
+      lineArray.push(store)
       drawLine(lineArray);
     } else if (marker == true) {
       markerArray.push([e.latlng.lat, e.latlng.lng]);
       L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
     } else if (polygon == true) {
-      polygonArray.push([e.latlng.lat, e.latlng.lng]);
+      store.push([e.latlng.lat, e.latlng.lng]);
+      polygonArray.push(store);
       drawPolygon(polygonArray);
     } else if (rectangle == true) {
-      rectangleArray.push([e.latlng.lat, e.latlng.lng]);
+      store.push([e.latlng.lat, e.latlng.lng]);
+      rectangleArray.push(store);
+      if(store[1] != undefined){
+        store = [];
+      }
       drawRectangle(rectangleArray);
     } else if (circle == true) {
       var circleOptions = {
