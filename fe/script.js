@@ -41,9 +41,8 @@ function reset() {
   lineArray = [];
   polygonArray = [];
   rectangleArray = [];
+  markerArray = [];
 }
-
-
 
 //post data with axios
 function save() {
@@ -83,7 +82,7 @@ function draw() {
         fillColor: "#f03",
         fillOpacity: 0,
       };
-      L.circle([e.latlng.lat, e.latlng.lng], 5000000000, circleOptions).addTo(map);
+      L.circle([e.latlng.lat, e.latlng.lng], 5000, circleOptions).addTo(map);
     }
   });
 }
@@ -100,3 +99,36 @@ function drawRectangle(array) {
   var rectangle = L.rectangle(array, { color: "red" }).addTo(map);
   rectangle.addTo(layerGroup);
 } 
+
+//different style markers
+var myIcon = L.icon({
+  iconUrl: "marker.png",
+  iconSize: [38, 95],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76],
+  shadowUrl: "marker-shadow.png",
+  shadowSize: [68, 95],
+  shadowAnchor: [22, 94],
+});
+
+//get data with axios with async await
+async function load() {
+  const res = await axios.get("http://localhost:3000/load");
+  console.log(res.data);
+  var data = res.data;
+  for (var i = 0; i < data.marker.length; i++) {
+    L.marker(data.marker[i], { icon: myIcon }).addTo(map);
+  }
+  for (var i = 0; i < data.line.length; i++) {
+    lineArray.push(data.line[i]);
+  }
+  drawLine(lineArray);
+  for (var i = 0; i < data.polygon.length; i++) {
+    polygonArray.push(data.polygon[i]);
+  }
+  drawPolygon(polygonArray);
+  for (var i = 0; i < data.rectangle.length; i++) {
+    rectangleArray.push(data.rectangle[i]);
+  }
+  drawRectangle(rectangleArray);
+}
