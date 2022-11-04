@@ -79,7 +79,6 @@ function draw() {
       drawPolygon(polygonArray);
     } else if (rectangle == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-
       if (store[1] != undefined) {
         rectangleArray.push(store);
         console.log(rectangleArray);
