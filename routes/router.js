@@ -36,5 +36,10 @@ router.route("/get").get((req, res) => {
         });
 });
 
+//get data from login page
+router.route("/login").post((req, res) => {
+    console.log(req.body);
+    res.json(req.body);
+});
 
 module.exports = router;
