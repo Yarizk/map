@@ -38,10 +38,7 @@ var hand, line, marker, polygon, rectangle, circle;
 
 function reset() {
   layerGroup.clearLayers();
-  lineArray = [];
-  polygonArray = [];
-  rectangleArray = [];
-  markerArray = [];
+
 }
 
 //post data with axios
@@ -58,6 +55,11 @@ function save() {
     .post("http://localhost:3000/save", data)
     .then((res) => {
       console.log(res);
+      lineArray = [];
+      polygonArray = [];
+      rectangleArray = [];
+      markerArray = [];
+      
     })
     .catch((err) => {
       console.log(err);
@@ -120,7 +122,7 @@ function drawRectangle(array) {
 //   shadowAnchor: [22, 94],
 // });
 
-//get data with axios async await
+
 async function get() {
   const response = await axios.get("http://localhost:3000/get");
   const data = response.data;
