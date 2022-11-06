@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 3000;
+const userRoute = require('./routes/registerRoute');
 
 
 //post
@@ -24,6 +25,7 @@ app.use(cors());
 //routes
 const routes = require('./routes/router');
 app.use('/', routes);
+app.use('/register', userRoute);
 
 //listen
 app.listen(port, () => console.log(`App listening on port ${port}!`));

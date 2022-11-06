@@ -143,15 +143,17 @@ async function get() {
 
 //login function and send it to backend with axios
 function login() {
+  var email = document.getElementById("email").value;
   var username = document.getElementById("username").value;
   var password = document.getElementById("password").value;
   var data = {
+    email: email,
     username: username,
     password: password,
   };
   console.log(data);
   axios
-    .post("http://localhost:3000/login", data)
+    .post("http://localhost:3000/register", data)
     .then((res) => {
       console.log(res);
     })
