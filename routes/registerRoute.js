@@ -9,43 +9,72 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-//register
-router.route("/").post((req, res) => {
-  const username = req.body.username;
+// register
+router.post("/register", (req, res) => {
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+
+    User.findOne({ email: email }, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+        } else {
+            if (foundUser) {
+                res.send("User already exists");
+            } else {
+                bcrypt.hash(password, saltRounds, (err, hash) => {
+                    const newUser = new User({
+                        email: email,
+                        username: username,
+                        password: hash,
+                    });
+                    if(newUser.username === "" || newUser.password === "" || newUser.email === ""){
+                        res.send("Please fill all fields")
+                    }else{
+
+
+                    newUser.save((err) => {
+                        if (err) {
+                            res.send(err.message);
+                        } else {
+                            res.send("User registered");
+                        }
+                    });
+                }
+                });
+            }
+        }
+    });
+});
+
+// login
+router.route("/login").post((req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-    
-  // check if email exist
+
   User.findOne({ email: email }, (err, foundUser) => {
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        res.send("Email already exist");
-      } else {
-        bcrypt.hash(password, saltRounds, (err, hash) => {
-          if (err) {
-            console.log(err);
+        bcrypt.compare(password, foundUser.password, (err, result) => {
+          if (result === true) {
+            res.send("Login Successful");
+          } else {
+            res.send("Wrong Password");
           }
-
-          const newUser = new User({
-            username: username,
-            email: email,
-            password: hash,
-          });
-
-          newUser
-            .save()
-            .then((data) => {
-              res.json(data);
-            })
-            .catch((error) => {
-              res.json(error);
-            });
         });
+      } else {
+        res.send("Email does not exist");
       }
     }
   });
 });
+
+module.exports = router;
+
+
+
+
 
 module.exports = router;

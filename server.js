@@ -25,7 +25,7 @@ app.use(cors());
 //routes
 const routes = require('./routes/router');
 app.use('/', routes);
-app.use('/register', userRoute);
+app.use('/user', userRoute);
 
 //listen
 app.listen(port, () => console.log(`App listening on port ${port}!`));

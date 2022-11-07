@@ -144,7 +144,7 @@ async function get() {
 }
 
 //login function and send it to backend with axios
-function login() {
+function register() {
   var email = document.getElementById("email").value;
   var username = document.getElementById("username").value;
   var password = document.getElementById("password").value;
@@ -153,11 +153,29 @@ function login() {
     username: username,
     password: password,
   };
-  console.log(data);
   axios
-    .post("http://localhost:3000/register", data)
+    .post("http://localhost:3000/user/register", data)
     .then((res) => {
-      console.log(res);
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function login(){
+  var email = document.getElementById("email").value;
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
+  var data = {
+    email: email,
+    username: username,
+    password: password,
+  };
+  axios
+    .post("http://localhost:3000/user/login", data)
+    .then((res) => {
+      console.log(res.data);
     })
     .catch((err) => {
       console.log(err);
