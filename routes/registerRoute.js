@@ -11,6 +11,12 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 // register
+
+
+router.route("/register").get((req, res) => {
+  res.render("register");
+})
+
 router.post("/register", (req, res) => {
     const email = req.body.email;
     const username = req.body.username;
@@ -32,13 +38,11 @@ router.post("/register", (req, res) => {
                     if(newUser.username === "" || newUser.password === "" || newUser.email === ""){
                         res.send("Please fill all fields")
                     }else{
-
-
                     newUser.save((err) => {
                         if (err) {
                             res.send("Please enter valid email address");
                         } else {
-                            res.redirect("login");
+                            res.render("login");
                         }
                     });
                 }
@@ -50,9 +54,8 @@ router.post("/register", (req, res) => {
 
 // login
 router.route("/login").get((req, res) => {
-    res.sendFile('../client/components/login.html')
+  res.render("login");
 })
-
 router.route("/login").post((req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -78,8 +81,3 @@ router.route("/login").post((req, res) => {
 
 module.exports = router;
 
-
-
-
-
-module.exports = router;

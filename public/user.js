@@ -18,7 +18,7 @@ function register() {
           else if(res.data == "Please fill all fields"){
             document.getElementById("warning").innerHTML = "please fill all fields"}
           else{
-            alert("User registered successfully")
+            console.log("User registered successfully")
           }
       })
       .catch((err) => {
@@ -28,11 +28,9 @@ function register() {
   
   function login(){
     var email = document.getElementById("email").value;
-    var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     var data = {
       email: email,
-      username: username,
       password: password,
     };
     console.log(data);
@@ -42,6 +40,6 @@ function register() {
         alert(res.data)
       })
       .catch((err) => {
-        console.log(err);
+        alert(err);
       });
   }

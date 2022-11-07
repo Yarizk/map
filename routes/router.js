@@ -2,7 +2,9 @@ const express = require("express");
 const coordinate = require("../models/baseModel");
 const router = express.Router();
 
-
+router.route("/").get((req, res) => {
+    res.render('map');
+});
 
 //save data to mongodb
 router.route("/save").post((req, res) => {
