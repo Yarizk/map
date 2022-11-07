@@ -35,7 +35,7 @@ router.post("/register", (req, res) => {
 
                     newUser.save((err) => {
                         if (err) {
-                            res.send(err.message);
+                            res.send("Please enter valid email address");
                         } else {
                             res.send("User registered");
                         }

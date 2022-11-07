@@ -1,3 +1,5 @@
+
+
 var map = L.map("map", {
   crs: L.CRS.Simple,
   minZoom: 0,
@@ -143,6 +145,9 @@ async function get() {
   }
 }
 
+
+
+
 //login function and send it to backend with axios
 function register() {
   var email = document.getElementById("email").value;
@@ -156,7 +161,16 @@ function register() {
   axios
     .post("http://localhost:3000/user/register", data)
     .then((res) => {
-      console.log(res.data);
+      if(res.data == "User already exists"){
+        alert("user already exists")}
+        else if(res.data == "Please enter valid email address"){
+          alert("Please enter valid email address")
+        }
+        else if(res.data == "Please fill all fields"){
+          alert("Please fill all fields")}
+        else{
+          alert("User created")
+        }
     })
     .catch((err) => {
       console.log(err);
@@ -175,7 +189,7 @@ function login(){
   axios
     .post("http://localhost:3000/user/login", data)
     .then((res) => {
-      console.log(res.data);
+      alert(res.data)
     })
     .catch((err) => {
       console.log(err);
