@@ -5,12 +5,16 @@ const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 3000;
 const userRoute = require('./routes/registerRoute');
+const path = require('path')
 
 
 //post
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
+
+app.set('view engine', 'html');
 
 //connect to mongodb
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });

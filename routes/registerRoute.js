@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+
 const bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
@@ -37,7 +38,7 @@ router.post("/register", (req, res) => {
                         if (err) {
                             res.send("Please enter valid email address");
                         } else {
-                            res.send("User registered");
+                            res.redirect("login");
                         }
                     });
                 }
@@ -48,6 +49,10 @@ router.post("/register", (req, res) => {
 });
 
 // login
+router.route("/login").get((req, res) => {
+    res.sendFile('../client/components/login.html')
+})
+
 router.route("/login").post((req, res) => {
   const email = req.body.email;
   const password = req.body.password;

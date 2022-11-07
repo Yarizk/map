@@ -40,32 +40,10 @@ var hand, line, marker, polygon, rectangle, circle;
 
 function reset() {
   layerGroup.clearLayers();
-
-}
-
-//post data with axios
-function save() {
-  store = [];
-  var data = {
-    marker: markerArray,
-    line: lineArray,
-    polygon: polygonArray,
-    rectangle: rectangleArray,
-  };
-  console.log(data);
-  axios
-    .post("http://localhost:3000/save", data)
-    .then((res) => {
-      console.log(res);
-      lineArray = [];
-      polygonArray = [];
-      rectangleArray = [];
-      markerArray = [];
-      
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  lineArray = [];
+  polygonArray = [];
+  rectangleArray = [];
+  markerArray = [];
 }
 
 function draw() {
@@ -145,51 +123,25 @@ async function get() {
   }
 }
 
-
-
-
-//login function and send it to backend with axios
-function register() {
-  var email = document.getElementById("email").value;
-  var username = document.getElementById("username").value;
-  var password = document.getElementById("password").value;
+//post data with axios
+function save() {
+  store = [];
   var data = {
-    email: email,
-    username: username,
-    password: password,
+    marker: markerArray,
+    line: lineArray,
+    polygon: polygonArray,
+    rectangle: rectangleArray,
   };
+  console.log(data);
   axios
-    .post("http://localhost:3000/user/register", data)
+    .post("http://localhost:3000/save", data)
     .then((res) => {
-      if(res.data == "User already exists"){
-        alert("user already exists")}
-        else if(res.data == "Please enter valid email address"){
-          alert("Please enter valid email address")
-        }
-        else if(res.data == "Please fill all fields"){
-          alert("Please fill all fields")}
-        else{
-          alert("User created")
-        }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
-
-function login(){
-  var email = document.getElementById("email").value;
-  var username = document.getElementById("username").value;
-  var password = document.getElementById("password").value;
-  var data = {
-    email: email,
-    username: username,
-    password: password,
-  };
-  axios
-    .post("http://localhost:3000/user/login", data)
-    .then((res) => {
-      alert(res.data)
+      console.log(res);
+      lineArray = [];
+      polygonArray = [];
+      rectangleArray = [];
+      markerArray = [];
+      
     })
     .catch((err) => {
       console.log(err);
