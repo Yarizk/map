@@ -18,7 +18,7 @@ function register() {
           else if(res.data == "Please fill all fields"){
             document.getElementById("warning").innerHTML = "please fill all fields"}
           else{
-            console.log("User registered successfully")
+            window.location.href = "/login"
           }
       })
       .catch((err) => {
@@ -37,9 +37,16 @@ function register() {
     axios
       .post("http://localhost:3000/login", data)
       .then((res) => {
-        alert(res.data)
+        if(res.data == "Email does not exist"){
+            document.getElementById("warning").innerHTML = "User not found"}
+          else if(res.data == "Wrong Password"){
+            document.getElementById("warning").innerHTML = "Incorrect password"
+          }
+          else{
+            window.location.href = "/"
+          }
       })
       .catch((err) => {
-        alert(err);
-      });
-  }
+        console.log(err);
+      })
+    }

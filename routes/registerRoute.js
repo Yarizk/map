@@ -42,7 +42,7 @@ router.post("/register", (req, res) => {
                         if (err) {
                             res.send("Please enter valid email address");
                         } else {
-                            res.render("login");
+                            res.redirect("/login");
                         }
                     });
                 }
@@ -52,10 +52,12 @@ router.post("/register", (req, res) => {
     });
 });
 
+
 // login
 router.route("/login").get((req, res) => {
   res.render("login");
 })
+
 router.route("/login").post((req, res) => {
   const email = req.body.email;
   const password = req.body.password;
