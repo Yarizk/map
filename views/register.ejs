@@ -13,17 +13,17 @@
 
               <form>
                 <div class="form-outline mb-4">
-                  <input type="text"  class="form-control form-control-lg" id="username"/>
+                  <input type="text"  class="form-control form-control-lg" id="username" onchange="warningClear()"/>
                   <label class="form-label" for="form3Example1cg">Your Name</label>
                 </div>
 
                 <div class="form-outline mb-4">
-                  <input type="email"  class="form-control form-control-lg" id = "email" placeholder=""/>
+                  <input type="email"  class="form-control form-control-lg" id = "email" placeholder="" onchange="warningClear()"/>
                   <label class="form-label" for="form3Example3cg">Your Email</label>
                 </div>
 
                 <div class="form-outline mb-4">
-                  <input type="password" class="form-control form-control-lg" id="password" />
+                  <input type="password" class="form-control form-control-lg" id="password" onchange="warningClear()" />
                   <label class="form-label" for="form3Example4cg">Password</label>
                 </div>
                 <div id="warning" class="text-danger"></div>

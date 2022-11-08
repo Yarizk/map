@@ -50,3 +50,7 @@ function register() {
         console.log(err);
       })
     }
+
+    function warningClear(){
+        document.getElementById("warning").innerHTML = ""
+    }
