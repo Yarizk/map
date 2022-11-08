@@ -1,5 +1,3 @@
-
-
 var map = L.map("map", {
   crs: L.CRS.Simple,
   minZoom: 0,
@@ -19,22 +17,36 @@ map.fitBounds(bounds);
 var layerGroup = L.layerGroup().addTo(map);
 
 function choose() {
-  store = [];
   var ele = document.getElementsByName("choose");
+  for(var i = 0; i < ele.length; i++){
+    if(window[ele[i].value] == true){
+      eval(ele[i].value + "Array.push(store)");
+    }
+  }
+  console.log(markerArray);
+  console.log(lineArray);
+  console.log(polygonArray);
+  console.log(rectangleArray);
+  store = [];
+
   for (i = 0; i < ele.length; i++) {
     if (!ele[i].checked) {
       window[ele[i].value] = false;
+
     } else if (ele[i].checked) {
       window[ele[i].value] = true;
-      draw();
+
+
     }
   }
 }
+
 
 var lineArray = [],
   polygonArray = [],
   rectangleArray = [],
   markerArray = [];
+  handArray = [];
 var store = [];
 var hand, line, marker, polygon, rectangle, circle;
 
@@ -44,39 +56,32 @@ function reset() {
   polygonArray = [];
   rectangleArray = [];
   markerArray = [];
+  store = [];
 }
 
-function draw() {
-  map.on("click", function (e) {
+map.on("click", function (e) {
+
+    console.log(polygonArray);
     if (line == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-      lineArray.push(store);
-      drawLine(lineArray);
+      drawLine(store);
     } else if (marker == true) {
       markerArray.push([e.latlng.lat, e.latlng.lng]);
-      L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+      L.marker([e.latlng.lat, e.latlng.lng]).bindPopup("aaa").addTo(map);
+      console.log(markerArray);
     } else if (polygon == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-      polygonArray.push(store);
-      drawPolygon(polygonArray);
+      drawPolygon(store);
     } else if (rectangle == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
       if (store[1] != undefined) {
-        rectangleArray.push(store);
-        console.log(rectangleArray);
         drawRectangle(store);
+        rectangleArray.push(store);
         store = [];
       }
-    } else if (circle == true) {
-      var circleOptions = {
-        color: "red",
-        fillColor: "#f03",
-        fillOpacity: 0,
-      };
-      L.circle([e.latlng.lat, e.latlng.lng], 5000, circleOptions).addTo(map);
     }
-  });
-}
+  
+});
 
 function drawLine(array) {
   var line = L.polyline(array, { color: "red" }).addTo(map);
@@ -91,22 +96,10 @@ function drawRectangle(array) {
   rectangle.addTo(layerGroup);
 }
 
-// //different style markers
-// var myIcon = L.icon({
-//   iconUrl: "marker.png",
-//   iconSize: [38, 95],
-//   iconAnchor: [22, 94],
-//   popupAnchor: [-3, -76],
-//   shadowUrl: "marker-shadow.png",
-//   shadowSize: [68, 95],
-//   shadowAnchor: [22, 94],
-// });
-
 
 async function get() {
   const response = await axios.get("http://localhost:3000/get");
   const data = response.data;
-  console.log(data);
   for (let j = 0; j < data.length; j++) {
     for (let i = 0; i < data[j].marker.length; i++) {
       L.marker(data[j].marker[i]).addTo(map);
@@ -123,9 +116,12 @@ async function get() {
   }
 }
 
+
+
+
+
 //post data with axios
 function save() {
-  
   store = [];
   var data = {
     marker: markerArray,
@@ -133,25 +129,21 @@ function save() {
     polygon: polygonArray,
     rectangle: rectangleArray,
   };
-  console.log(data);
+  // console.log(data);
   axios
     .post("http://localhost:3000/save", data)
     .then((res) => {
-      console.log(res);
-      lineArray = [];
-      polygonArray = [];
-      rectangleArray = [];
-      markerArray = [];
-      
+      console.log("post succes" + res);
     })
-    .catch(() => {
-      document.getElementsByClassName("warning")[0].textContent = "You harus register to nyimpen data";
+    .catch((err) => {
+      console.log(err);
+      document.getElementsByClassName("warning")[0].textContent =
+        "You harus register to nyimpen data";
       const href = document.createElement("a");
       href.setAttribute("href", "/register");
       href.textContent = "Register here";
       const br = document.createElement("br");
       document.getElementsByClassName("warning")[0].appendChild(br);
-      document.getElementsByClassName("warning")[0].appendChild(href)
-      
+      document.getElementsByClassName("warning")[0].appendChild(href);
     });
 }

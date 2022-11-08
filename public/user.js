@@ -13,7 +13,7 @@ function register() {
         if(res.data == "User already exists"){
             document.getElementById("warning").innerHTML = "user already exists"}
           else if(res.data == "Please enter valid email address"){
-            document.getElementById("warning").innerHTML = "Please enter valid email address"
+            document.getElementById("warning").innerHTML = "Please enter valid email address / username"
           }
           else if(res.data == "Please fill all fields"){
             document.getElementById("warning").innerHTML = "please fill all fields"}

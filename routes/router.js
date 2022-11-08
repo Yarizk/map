@@ -9,7 +9,7 @@ router.route("/").get((req, res) => {
 
 //save data to mongodb
 // save data after authentication
-router.post("/save", checkAuth, (req, res) => {
+router.route("/save" ).post(checkAuth,(req, res) => {
     const coordinates = new coordinate({
         marker: req.body.marker,
         line: req.body.line,
@@ -26,7 +26,6 @@ router.post("/save", checkAuth, (req, res) => {
             res.json(error);
         });
 });
-
 
 //route to get data from mongodb
 router.route("/get").get((req, res) => {

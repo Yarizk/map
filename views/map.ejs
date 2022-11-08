@@ -2,19 +2,20 @@
  
 <body>
     <%- include("./nav.ejs") %>
+    <div class="container">
     <div id="map" ></div>
-    
-    <input type="radio" name="choose" value="hand"onchange="choose()">
-    <label for="Hand">Hand</label>
-    <input type="radio" name="choose" value="marker"onchange="choose()">
+    <input type="text" class="form-control" id="inputtitle3" placeholder="Title">
+    <input type="radio" name="choose" id="hand"value="hand"onchange="choose()">
+    <label for="Hand">Hand</label> <br>
+    <input type="radio" name="choose" id="marker" value="marker"onchange="choose()">
     <label for="Markers">Markers</label><br>
-    <input type="radio" name="choose" value="line"onchange="choose()">
+    <input type="radio" name="choose" id="line"value="line"onchange="choose()">
     <label for="Polyline">Polyline</label><br>
-    <input type="radio" name="choose" value="polygon"onchange="choose()">
+    <input type="radio" name="choose" id="polygon" value="polygon"onchange="choose()">
     <label for="Polyline">polygon</label><br>
-    <input type="radio" name="choose" value="rectangle"onchange="choose()">
+    <input type="radio" name="choose" id="rectangle" value="rectangle"onchange="choose()">
     <label for="Polyline">rectangle</label><br>
-    <input type="radio" name="choose" value="circle"onchange="choose()">
+    <input type="radio" name="choose" id="circle" value="circle"onchange="choose()">
     <label for="Polyline">circle</label><br>
     <div class="warning"></div>
     <button onclick="reset()">clear</button>
