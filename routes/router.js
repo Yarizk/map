@@ -1,7 +1,7 @@
 const express = require("express");
 const coordinate = require("../models/baseModel");
 const router = express.Router();
-const checkAuth = require("../controller/check_auth");
+const checkAuth = require("../middleware/check_auth");
 
 router.route("/").get((req, res) => {
     res.render('map');
