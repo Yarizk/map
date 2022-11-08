@@ -1,13 +1,15 @@
 const express = require("express");
 const coordinate = require("../models/baseModel");
 const router = express.Router();
+const checkAuth = require("../controller/check_auth");
 
 router.route("/").get((req, res) => {
     res.render('map');
 });
 
 //save data to mongodb
-router.route("/save").post((req, res) => {
+// save data after authentication
+router.post("/save", checkAuth, (req, res) => {
     const coordinates = new coordinate({
         marker: req.body.marker,
         line: req.body.line,
@@ -24,6 +26,7 @@ router.route("/save").post((req, res) => {
             res.json(error);
         });
 });
+
 
 //route to get data from mongodb
 router.route("/get").get((req, res) => {

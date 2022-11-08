@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 
 
@@ -69,7 +70,16 @@ router.route("/login").post((req, res) => {
       if (foundUser) {
         bcrypt.compare(password, foundUser.password, (err, result) => {
           if (result === true) {
-            res.send("Login Successful");
+            const payload = {
+              _id: foundUser._id,
+              username: foundUser.username,
+            };
+            const token = jwt.sign({ payload }, process.env.SECRET, {expiresIn : "1h"});
+            res.cookie("jwt", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+            console.log(token)
+            res.redirect("/");
+
+          
           } else {
             res.send("Wrong Password");
           }

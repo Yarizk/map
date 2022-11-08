@@ -5,6 +5,7 @@ const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 3000;
 const userRoute = require('./routes/registerRoute');
+const cookieParser = require("cookie-parser");
 
 
 
@@ -12,7 +13,7 @@ const userRoute = require('./routes/registerRoute');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
