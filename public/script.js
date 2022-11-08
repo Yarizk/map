@@ -125,6 +125,7 @@ async function get() {
 
 //post data with axios
 function save() {
+  
   store = [];
   var data = {
     marker: markerArray,
@@ -143,7 +144,14 @@ function save() {
       markerArray = [];
       
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
+      document.getElementsByClassName("warning")[0].textContent = "You harus register to nyimpen data";
+      const href = document.createElement("a");
+      href.setAttribute("href", "/register");
+      href.textContent = "Register here";
+      const br = document.createElement("br");
+      document.getElementsByClassName("warning")[0].appendChild(br);
+      document.getElementsByClassName("warning")[0].appendChild(href)
+      
     });
 }
