@@ -18,35 +18,25 @@ var layerGroup = L.layerGroup().addTo(map);
 
 function choose() {
   var ele = document.getElementsByName("choose");
+  if(store.length != 0){
   for(var i = 0; i < ele.length; i++){
     if(window[ele[i].value] == true){
       eval(ele[i].value + "Array.push(store)");
-    }
+      eval(ele[i].value + "Popup.push(popupa())");
+    }}
   }
-  console.log(markerArray);
-  console.log(lineArray);
-  console.log(polygonArray);
-  console.log(rectangleArray);
   store = [];
-
   for (i = 0; i < ele.length; i++) {
     if (!ele[i].checked) {
       window[ele[i].value] = false;
-
     } else if (ele[i].checked) {
       window[ele[i].value] = true;
-
-
     }
   }
 }
 
 
-var lineArray = [],
-  polygonArray = [],
-  rectangleArray = [],
-  markerArray = [];
-  handArray = [];
+var lineArray = [],polygonArray = [],rectangleArray = [],markerArray = [];handArray = [],handPopup =[], markerPopup =[], linePopup = [], polygonPopup = [], rectanglePopup = [];
 var store = [];
 var hand, line, marker, polygon, rectangle, circle;
 
@@ -56,43 +46,54 @@ function reset() {
   polygonArray = [];
   rectangleArray = [];
   markerArray = [];
+  markerPopup = [];
+  linePopup = [];
+  polygonPopup = [];
+  rectanglePopup = [];
   store = [];
 }
 
 map.on("click", function (e) {
-
     console.log(polygonArray);
     if (line == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-      drawLine(store);
+      drawLine(store,popupa());
     } else if (marker == true) {
       markerArray.push([e.latlng.lat, e.latlng.lng]);
       L.marker([e.latlng.lat, e.latlng.lng]).bindPopup("aaa").addTo(map);
-      console.log(markerArray);
     } else if (polygon == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
-      drawPolygon(store);
+      drawPolygon(store,popupa());
     } else if (rectangle == true) {
       store.push([e.latlng.lat, e.latlng.lng]);
       if (store[1] != undefined) {
-        drawRectangle(store);
         rectangleArray.push(store);
+        drawRectangle(store, popupa());
         store = [];
       }
     }
   
 });
 
-function drawLine(array) {
-  var line = L.polyline(array, { color: "red" }).addTo(map);
+function popupa() {
+  var popup = document.getElementById("inputtitle");
+  return `<p>${popup.value}<p/>`;
+}
+
+function addMarker([coor], popup) {
+  var marker = L.marker(coor).bindPopup(popup).addTo(map);
+  marker.addTo(layerGroup);
+}
+function drawLine(array,popup) {
+  var line = L.polyline(array, { color: "red" }).bindPopup(popup).addTo(map);
   line.addTo(layerGroup);
 }
-function drawPolygon(array) {
-  var polygon = L.polygon(array, { color: "red" }).addTo(map);
+function drawPolygon(array,popup) {
+  var polygon = L.polygon(array, { color: "red" }).bindPopup(popup).addTo(map);
   polygon.addTo(layerGroup);
 }
-function drawRectangle(array) {
-  var rectangle = L.rectangle(array, { color: "red" }).addTo(map);
+function drawRectangle(array,popup) {
+  var rectangle = L.rectangle(array, { color: "red" }).bindPopup(popup).addTo(map);
   rectangle.addTo(layerGroup);
 }
 
@@ -101,18 +102,23 @@ async function get() {
   const response = await axios.get("http://localhost:3000/get");
   const data = response.data;
   for (let j = 0; j < data.length; j++) {
-    for (let i = 0; i < data[j].marker.length; i++) {
-      L.marker(data[j].marker[i]).addTo(map);
+    for (let i = 0; i < data[j].marker.coordinates.length; i++) {
+      L.marker(data[j].marker.coordinates[i]).bindPopup(data[j].marker.popup[i]).addTo(map);
     }
-    for (let i = 0; i < data[j].line.length; i++) {
-      drawLine(data[j].line[i]);
+    for (let i = 0; i < data[j].line.coordinates.length; i++) {
+      drawLine(data[j].line.coordinates[i], data[j].line.popup[i]);
     }
-    for (let i = 0; i < data[j].polygon.length; i++) {
-      drawPolygon(data[j].polygon[i]);
+    for (let i = 0; i < data[j].polygon.coordinates.length; i++) {
+      drawPolygon(data[j].polygon.coordinates[i],data[j].polygon.popup[i]);
     }
-    for (let i = 0; i < data[j].rectangle.length; i++) {
-      drawRectangle(data[j].rectangle[i]);
+    for (let i = 0; i < data[j].rectangle.coordinates.length; i++) {
+      if (data[j].rectangle.coordinates[i] == undefined) {
+        continue;
+      }else{
+      drawRectangle(data[j].rectangle.coordinates[i], data[j].rectangle.popup[i]);
+      }
     }
+    
   }
 }
 
@@ -124,10 +130,10 @@ async function get() {
 function save() {
   store = [];
   var data = {
-    marker: markerArray,
-    line: lineArray,
-    polygon: polygonArray,
-    rectangle: rectangleArray,
+    marker: { popup: markerPopup, coordinates: markerArray },
+    line: { popup: linePopup, coordinates: lineArray },
+    polygon: { popup: polygonPopup, coordinates: polygonArray },
+    rectangle: { popup: rectanglePopup, coordinates: rectangleArray },
   };
   // console.log(data);
   axios
