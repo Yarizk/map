@@ -1,16 +1,17 @@
 var map = L.map("map", {
   crs: L.CRS.Simple,
-  minZoom: 0,
-  maxZoom: 3,
+  minZoom: 2,
+  maxZoom: 5,
   zoomSnap: 0.3,
   maxBounds: [
-    [-50, -20],
-    [1000, 1600],
+    [-100, -170],
+    [100, 170],
   ],
 });
+
 var bounds = [
-  [0, 0],
-  [1000, 1500],
+  [-85, -150],
+  [85, 150],
 ];
 var image = L.imageOverlay("2.jpg", bounds).addTo(map);
 map.fitBounds(bounds);
@@ -18,17 +19,8 @@ var layerGroup = L.layerGroup().addTo(map);
 var markerGroup = L.layerGroup().addTo(map);
 
 function choose() {
+  pushData();
   var ele = document.getElementsByName("choose");
-  if (store.length != 0) {
-    for (var i = 0; i < ele.length; i++) {
-      console.log(ele[i].value);
-      if (window[ele[i].value] == true) {
-        eval(ele[i].value + "Array.push(store)");
-        eval(ele[i].value + "Popup.push(popupa())");
-      }
-    }
-  }
-
   store = [];
   for (i = 0; i < ele.length; i++) {
     if (!ele[i].checked) {
@@ -50,7 +42,27 @@ var lineArray = [],
   polygonPopup = [],
   rectanglePopup = [];
 var store = [];
-var hand, line, marker, polygon, rectangle, circle;
+var hand, line, marker, polygon, rectangle, circle,component;
+
+function pushData() {
+  if (component != undefined) {
+  component.bindPopup(popupa()).openPopup();}
+  var ele = document.getElementsByName("choose");
+  if (store.length != 0) {
+    for (var i = 0; i < ele.length; i++) {
+      console.log(ele[i].value);
+      // fix thisssssssss markerpopup rectangle popup
+      if (window[ele[i].value] == true) {
+        eval(ele[i].value + "Array.push(store)");
+        eval(ele[i].value + "Popup.push(popupa())");
+      }
+    }
+  }
+  if(rectangle == true && rectangleArray.length !=0){
+    rectanglePopup.push(popupa())
+  }
+  console.log(rectanglePopup);
+}
 
 function reset() {
   markerGroup.clearLayers();
@@ -67,12 +79,14 @@ function reset() {
 }
 
 map.on("click", function (e) {
+  alert([e.latlng.lat, e.latlng.lng])
   if (line == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     drawLine(store, popupa());
   } else if (marker == true) {
+    store.push([e.latlng.lat, e.latlng.lng]);
     markerArray.push([e.latlng.lat, e.latlng.lng]);
-    markerPopup.push(popupa());
+    // markerPopup.push(popupa());
     addMarker(e.latlng.lat, e.latlng.lng, popupa());
   } else if (polygon == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
@@ -80,6 +94,7 @@ map.on("click", function (e) {
   } else if (rectangle == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     if (store[1] != undefined) {
+      // rectanglePopup.push(popupa());
       rectangleArray.push(store);
       drawRectangle(store, popupa());
       store = [];
@@ -93,22 +108,22 @@ function popupa() {
 }
 
 function addMarker(lat, long, popup) {
-  var marker = L.marker([lat, long]).bindPopup(popup).addTo(map);
-  marker.addTo(markerGroup);
+  component = L.marker([lat, long]).bindPopup(popup).addTo(map);
+  component.addTo(markerGroup);
 }
 function drawLine(array, popup) {
-  var line = L.polyline(array, { color: "red" }).bindPopup(popup).addTo(map);
-  line.addTo(layerGroup);
+  component = L.polyline(array, { color: "red" }).bindPopup(popup).addTo(map);
+  component.addTo(layerGroup);
 }
 function drawPolygon(array, popup) {
-  var polygon = L.polygon(array, { color: "red" }).bindPopup(popup).addTo(map);
-  polygon.addTo(layerGroup);
+  component = L.polygon(array, { color: "red" }).bindPopup(popup).addTo(map);
+  component.addTo(layerGroup);
 }
 function drawRectangle(array, popup) {
-  var rectangle = L.rectangle(array, { color: "red" })
+  component = L.rectangle(array, { color: "red" })
     .bindPopup(popup)
     .addTo(map);
-  rectangle.addTo(layerGroup);
+  component.addTo(layerGroup);
 }
 
 async function get() {
@@ -141,6 +156,7 @@ async function get() {
 
 //post data with axios
 function save() {
+  pushData();
   store = [];
   var data = {
     marker: { popup: markerPopup, coordinates: markerArray },

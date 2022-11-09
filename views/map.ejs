@@ -1,36 +1,53 @@
-<%- include("./head.ejs") %> 
- 
-<body>
-    <%- include("./nav.ejs") %>
-    <div class="container">
-    <div id="map" ></div>
-    <input type="text" class="form-control" id="inputtitle" placeholder="Title">
-    <input type="radio" name="choose" id="hand"value="hand"onchange="choose()">
-    <label for="Hand">Hand</label> <br>
-    <input type="radio" name="choose" id="marker" value="marker"onchange="choose()">
-    <label for="Markers">Markers</label><br>
-    <input type="radio" name="choose" id="line"value="line"onchange="choose()">
-    <label for="Polyline">Polyline</label><br>
-    <input type="radio" name="choose" id="polygon" value="polygon"onchange="choose()">
-    <label for="Polyline">polygon</label><br>
-    <input type="radio" name="choose" id="rectangle" value="rectangle"onchange="choose()">
-    <label for="Polyline">rectangle</label><br>
-    <input type="radio" name="choose" id="circle" value="circle"onchange="choose()">
-    <label for="Polyline">circle</label><br>
-    <div class="warning"></div>
-    <button onclick="reset()">clear</button>
-    <button onclick="save()">Save</button>
-    <button onclick="get()">Load</button>
+<%- include("./head.ejs") %>
+
+    <body>
+        <%- include("./nav.ejs") %>
+            <div class="container">
+                <div id="map"></div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputtitle" placeholder="Title">
+                    </div>
+                </div>
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                        <div class="col-sm-10">
+                            <input type="radio" name="choose" id="hand" value="hand" onchange="choose()">
+                            <label for="Hand">Hand</label> <br>
+                            <input type="radio" name="choose" id="marker" value="marker" onchange="choose()">
+                            <label for="Markers">Markers</label><br>
+                            <input type="radio" name="choose" id="line" value="line" onchange="choose()">
+                            <label for="Polyline">Polyline</label><br>
+                            <input type="radio" name="choose" id="polygon" value="polygon" onchange="choose()">
+                            <label for="Polyline">polygon</label><br>
+                            <input type="radio" name="choose" id="rectangle" value="rectangle" onchange="choose()">
+                            <label for="Polyline">rectangle</label><br>
+                            <input type="radio" name="choose" id="circle" value="circle" onchange="choose()">
+                            <label for="Polyline">circle</label><br>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                <div class="warning"></div>
+                <button class="btn btn-danger"onclick="reset()">clear</button>
+                <button class="btn btn-primary"onclick="save()">Save</button>
+                <button class="btn btn-info"onclick="get()">Load</button>
+                </div>
+                </div>
 
 
-    <%- include("./column.ejs") %> 
+                <%- include("./column.ejs") %>
 
 
 
-</body>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="script.js">
+    </body>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="script.js">
 
- 
-</script>
-</html>
+
+    </script>
+
+    </html>
