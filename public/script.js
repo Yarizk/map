@@ -15,16 +15,20 @@ var bounds = [
 var image = L.imageOverlay("2.jpg", bounds).addTo(map);
 map.fitBounds(bounds);
 var layerGroup = L.layerGroup().addTo(map);
+var markerGroup = L.layerGroup().addTo(map);
 
 function choose() {
   var ele = document.getElementsByName("choose");
-  if(store.length != 0){
-  for(var i = 0; i < ele.length; i++){
-    if(window[ele[i].value] == true){
-      eval(ele[i].value + "Array.push(store)");
-      eval(ele[i].value + "Popup.push(popupa())");
-    }}
+  if (store.length != 0) {
+    for (var i = 0; i < ele.length; i++) {
+      console.log(ele[i].value);
+      if (window[ele[i].value] == true) {
+        eval(ele[i].value + "Array.push(store)");
+        eval(ele[i].value + "Popup.push(popupa())");
+      }
+    }
   }
+
   store = [];
   for (i = 0; i < ele.length; i++) {
     if (!ele[i].checked) {
@@ -35,12 +39,21 @@ function choose() {
   }
 }
 
-
-var lineArray = [],polygonArray = [],rectangleArray = [],markerArray = [];handArray = [],handPopup =[], markerPopup =[], linePopup = [], polygonPopup = [], rectanglePopup = [];
+var lineArray = [],
+  polygonArray = [],
+  rectangleArray = [],
+  markerArray = [],
+  handArray = [],
+  handPopup = [],
+  markerPopup = [],
+  linePopup = [],
+  polygonPopup = [],
+  rectanglePopup = [];
 var store = [];
 var hand, line, marker, polygon, rectangle, circle;
 
 function reset() {
+  markerGroup.clearLayers();
   layerGroup.clearLayers();
   lineArray = [];
   polygonArray = [];
@@ -54,25 +67,24 @@ function reset() {
 }
 
 map.on("click", function (e) {
-    console.log(polygonArray);
-    if (line == true) {
-      store.push([e.latlng.lat, e.latlng.lng]);
-      drawLine(store,popupa());
-    } else if (marker == true) {
-      markerArray.push([e.latlng.lat, e.latlng.lng]);
-      L.marker([e.latlng.lat, e.latlng.lng]).bindPopup("aaa").addTo(map);
-    } else if (polygon == true) {
-      store.push([e.latlng.lat, e.latlng.lng]);
-      drawPolygon(store,popupa());
-    } else if (rectangle == true) {
-      store.push([e.latlng.lat, e.latlng.lng]);
-      if (store[1] != undefined) {
-        rectangleArray.push(store);
-        drawRectangle(store, popupa());
-        store = [];
-      }
+  if (line == true) {
+    store.push([e.latlng.lat, e.latlng.lng]);
+    drawLine(store, popupa());
+  } else if (marker == true) {
+    markerArray.push([e.latlng.lat, e.latlng.lng]);
+    markerPopup.push(popupa());
+    addMarker(e.latlng.lat, e.latlng.lng, popupa());
+  } else if (polygon == true) {
+    store.push([e.latlng.lat, e.latlng.lng]);
+    drawPolygon(store, popupa());
+  } else if (rectangle == true) {
+    store.push([e.latlng.lat, e.latlng.lng]);
+    if (store[1] != undefined) {
+      rectangleArray.push(store);
+      drawRectangle(store, popupa());
+      store = [];
     }
-  
+  }
 });
 
 function popupa() {
@@ -80,51 +92,52 @@ function popupa() {
   return `<p>${popup.value}<p/>`;
 }
 
-function addMarker([coor], popup) {
-  var marker = L.marker(coor).bindPopup(popup).addTo(map);
-  marker.addTo(layerGroup);
+function addMarker(lat, long, popup) {
+  var marker = L.marker([lat, long]).bindPopup(popup).addTo(map);
+  marker.addTo(markerGroup);
 }
-function drawLine(array,popup) {
+function drawLine(array, popup) {
   var line = L.polyline(array, { color: "red" }).bindPopup(popup).addTo(map);
   line.addTo(layerGroup);
 }
-function drawPolygon(array,popup) {
+function drawPolygon(array, popup) {
   var polygon = L.polygon(array, { color: "red" }).bindPopup(popup).addTo(map);
   polygon.addTo(layerGroup);
 }
-function drawRectangle(array,popup) {
-  var rectangle = L.rectangle(array, { color: "red" }).bindPopup(popup).addTo(map);
+function drawRectangle(array, popup) {
+  var rectangle = L.rectangle(array, { color: "red" })
+    .bindPopup(popup)
+    .addTo(map);
   rectangle.addTo(layerGroup);
 }
-
 
 async function get() {
   const response = await axios.get("http://localhost:3000/get");
   const data = response.data;
   for (let j = 0; j < data.length; j++) {
     for (let i = 0; i < data[j].marker.coordinates.length; i++) {
-      L.marker(data[j].marker.coordinates[i]).bindPopup(data[j].marker.popup[i]).addTo(map);
+      L.marker(data[j].marker.coordinates[i])
+        .bindPopup(data[j].marker.popup[i])
+        .addTo(markerGroup);
     }
     for (let i = 0; i < data[j].line.coordinates.length; i++) {
       drawLine(data[j].line.coordinates[i], data[j].line.popup[i]);
     }
     for (let i = 0; i < data[j].polygon.coordinates.length; i++) {
-      drawPolygon(data[j].polygon.coordinates[i],data[j].polygon.popup[i]);
+      drawPolygon(data[j].polygon.coordinates[i], data[j].polygon.popup[i]);
     }
     for (let i = 0; i < data[j].rectangle.coordinates.length; i++) {
       if (data[j].rectangle.coordinates[i] == undefined) {
         continue;
-      }else{
-      drawRectangle(data[j].rectangle.coordinates[i], data[j].rectangle.popup[i]);
+      } else {
+        drawRectangle(
+          data[j].rectangle.coordinates[i],
+          data[j].rectangle.popup[i]
+        );
       }
     }
-    
   }
 }
-
-
-
-
 
 //post data with axios
 function save() {
