@@ -17,12 +17,16 @@ var image = L.imageOverlay("2.jpg", bounds).addTo(map);
 map.fitBounds(bounds);
 var layerGroup = L.layerGroup().addTo(map);
 var markerGroup = L.layerGroup().addTo(map);
+var handGroup = L.layerGroup().addTo(map);
 
 function choose() {
+  document.getElementsByClassName("warning")[0].textContent =
+  "";
   pushData();
   var ele = document.getElementsByName("choose");
   store = [];
   for (i = 0; i < ele.length; i++) {
+    console.log(ele[i].value);
     if (!ele[i].checked) {
       window[ele[i].value] = false;
     } else if (ele[i].checked) {
@@ -42,15 +46,15 @@ var lineArray = [],
   polygonPopup = [],
   rectanglePopup = [];
 var store = [];
-var hand, line, marker, polygon, rectangle, circle,component;
+var hand, line, marker, polygon, rectangle, circle, component;
 
 function pushData() {
   if (component != undefined) {
-  component.bindPopup(popupa())}
+    component.bindPopup(popupa());
+  }
   var ele = document.getElementsByName("choose");
   if (store.length != 0) {
     for (var i = 0; i < ele.length; i++) {
-      console.log(ele[i].value);
       if (window[ele[i].value] == true && ele[i].value != "marker") {
         eval(ele[i].value + "Array.push(store)");
         eval(ele[i].value + "Popup.push(popupa())");
@@ -59,15 +63,30 @@ function pushData() {
       }
     }
   }
-  if(rectangle == true && rectangleArray.length !=0){
-    rectanglePopup.push(popupa())
+  if (rectangle == true && rectangleArray.length != 0) {
+    rectanglePopup.push(popupa());
   }
   component = undefined;
 }
 
+function resetInput(){
+  document.getElementById("inputtitle").value = "";
+  document.getElementById("inputDescription").value = "";
+  var ele = document.getElementsByName("choose");
+  for (var i = 0; i < ele.length; i++) {
+    if (ele[i].checked) {
+      ele[i].checked = false;
+    }
+  }
+}
+
 function reset() {
+  resetInput();
   markerGroup.clearLayers();
   layerGroup.clearLayers();
+  clear();
+}
+function clear() {
   lineArray = [];
   polygonArray = [];
   rectangleArray = [];
@@ -77,26 +96,41 @@ function reset() {
   polygonPopup = [];
   rectanglePopup = [];
   store = [];
+  document.getElementsByClassName("warning")[0].textContent =
+  "Component cleared";
 }
 
-map.on("click", function (e) {
-    var lat= e.latlng.lat
-    var long = e.latlng.lng
+// async await axios call
+async function getTemp(lat, long) {
+  const response = await axios.get(
+    `https://fcc-weather-api.glitch.me/api/current?lat=${parseInt(
+      lat
+    )}&lon=${parseInt(long)}`
+  );
+  return [
+    (parseInt(response.data.main.temp) * 5) / 4 + " °C",
+    response.data.weather[0].main, response.data.weather[0].icon
+  ];
+}
+async function getAQI(lat, long) {
+  const response = await axios.get(
+    `https://api.waqi.info/feed/geo:${lat};${long}/?token=4b425bd3bd6267a0e9211736d91ccea0ecf19308`
+  );
+  return response.data.data.aqi;
+}
 
-  axios.get(`https://fcc-weather-api.glitch.me/api/current?lat=${parseInt(lat)}&lon=${parseInt(long)}`).then((response) => {
-    document.getElementById("inputTemp").value = parseInt(response.data.main.temp) * 5/4 + " °C";
-    document.getElementById("inputWeather").value = response.data.weather[0].main;
-    console.log(response.data);
-    console.log("sent");
-  });
-  axios.get(`https://api.waqi.info/feed/geo:${lat};${long}/?token=4b425bd3bd6267a0e9211736d91ccea0ecf19308`).then((response) => {
-    console.log(response.data);
-    document.getElementById("inputAir").value = response.data.data.aqi;
-    console.log("sent");
-  });
-  ;
-
-  if (line == true) {
+map.on("click", async function (e) {
+  handGroup.clearLayers();
+  var aqi, temp;
+  if (hand == true) {
+    aqi = await getAQI(e.latlng.lat, e.latlng.lng);
+    temp = await getTemp(e.latlng.lat, e.latlng.lng);
+    L.marker([e.latlng.lat, e.latlng.lng])
+      .bindTooltip(
+        `<p>Temp : ${temp[0]}<br/>Weather : ${temp[1]} <br/> AQI : ${aqi}<p/> <img src="${temp[2]}" alt="weather icon" width="50" height="50">`,
+      )
+      .addTo(handGroup);
+  } else if (line == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     drawLine(store, popupa());
   } else if (marker == true) {
@@ -114,6 +148,13 @@ map.on("click", function (e) {
       store = [];
     }
   }
+  if (aqi == undefined) {
+    aqi = await getAQI(e.latlng.lat, e.latlng.lng);
+    temp = await getTemp(e.latlng.lat, e.latlng.lng);
+  }
+  document.getElementById("inputTemp").value = temp[0];
+  document.getElementById("inputWeather").value = temp[1];
+  document.getElementById("inputAir").value = aqi;
 });
 
 // custom map marker
@@ -127,12 +168,13 @@ var myIcon = L.icon({
 function popupa() {
   var popupTitle = document.getElementById("inputtitle");
   var popupDescription = document.getElementById("inputDescription");
-  return `<p>${popupTitle.value}<p/>
-        <p>${popupDescription.value}<p/>`;
+  return `<p>${popupTitle.value}<br/>${popupDescription.value}</p>`;
 }
 
 function addMarker(lat, long, popup) {
-  component = L.marker([lat, long],{icon : myIcon}).bindPopup(popup).addTo(map);
+  component = L.marker([lat, long], { icon: myIcon })
+    .bindPopup(popup)
+    .addTo(map);
   component.addTo(markerGroup);
 }
 function drawLine(array, popup) {
@@ -144,22 +186,29 @@ function drawPolygon(array, popup) {
   component.addTo(layerGroup);
 }
 function drawRectangle(array, popup) {
-  component = L.rectangle(array, { color: "red" })
-    .bindPopup(popup)
-    .addTo(map);
+  component = L.rectangle(array, { color: "red" }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
 
 async function get() {
+  resetInput();
   const response = await axios.get("http://localhost:3000/get");
+  document.getElementsByClassName("warning")[0].textContent =
+  "Data loaded successfully";
   const data = response.data;
   for (let j = 0; j < data.length; j++) {
     for (let i = 0; i < data[j].marker.coordinates.length; i++) {
-      if(data[j].marker.popup[i] != null){
-        addMarker(data[j].marker.coordinates[i][0], data[j].marker.coordinates[i][1], data[j].marker.popup[i]);}
-        else{
-          L.marker(data[j].marker.coordinates[i] ,{icon:myIcon}).addTo(markerGroup)
-        }
+      if (data[j].marker.popup[i] != null) {
+        addMarker(
+          data[j].marker.coordinates[i][0],
+          data[j].marker.coordinates[i][1],
+          data[j].marker.popup[i]
+        );
+      } else {
+        L.marker(data[j].marker.coordinates[i], { icon: myIcon }).addTo(
+          markerGroup
+        );
+      }
     }
     for (let i = 0; i < data[j].line.coordinates.length; i++) {
       drawLine(data[j].line.coordinates[i], data[j].line.popup[i]);
@@ -183,6 +232,7 @@ async function get() {
 //post data with axios
 function save() {
   pushData();
+  resetInput();
   store = [];
   var data = {
     marker: { popup: markerPopup, coordinates: markerArray },
@@ -190,11 +240,12 @@ function save() {
     polygon: { popup: polygonPopup, coordinates: polygonArray },
     rectangle: { popup: rectanglePopup, coordinates: rectangleArray },
   };
-  // console.log(data);
   axios
     .post("http://localhost:3000/save", data)
     .then((res) => {
       console.log("post succes" + res);
+      document.getElementsByClassName("warning")[0].textContent =
+      "Data saved";
     })
     .catch((err) => {
       console.log(err);
@@ -207,4 +258,5 @@ function save() {
       document.getElementsByClassName("warning")[0].appendChild(br);
       document.getElementsByClassName("warning")[0].appendChild(href);
     });
+  clear();
 }
