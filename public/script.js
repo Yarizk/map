@@ -116,7 +116,19 @@ async function getAQI(lat, long) {
   const response = await axios.get(
     `https://api.waqi.info/feed/geo:${lat};${long}/?token=4b425bd3bd6267a0e9211736d91ccea0ecf19308`
   );
-  return response.data.data.aqi;
+  if(response.data.data.aqi >= 0 && response.data.data.aqi < 50){
+    return response.data.data.aqi + " (Baik)";
+  } else if (response.data.data.aqi >= 50 && response.data.data.aqi < 100){
+    return response.data.data.aqi + " (Sedang)";
+  } else if (response.data.data.aqi >= 100 && response.data.data.aqi < 150){
+    return response.data.data.aqi + " (Tidak Sehat)";
+  } else if (response.data.data.aqi >= 150 && response.data.data.aqi < 200){
+    return response.data.data.aqi + " (Sangat Tidak Sehat)";
+  } else if (response.data.data.aqi >= 200 ){
+    return response.data.data.aqi + " (Berbahaya)";
+  } else {
+    return "Tidak Tersedia";
+  }
 }
 
 map.on("click", async function (e) {
@@ -154,12 +166,13 @@ map.on("click", async function (e) {
   }
   document.getElementById("inputTemp").value = temp[0];
   document.getElementById("inputWeather").value = temp[1];
+  document.getElementById("inputWeatherImg").src = temp[2];
   document.getElementById("inputAir").value = aqi;
 });
 
 // custom map marker
 var myIcon = L.icon({
-  iconUrl: "map.svg",
+  iconUrl: "./svg/map.svg",
   iconSize: [30, 30],
   iconAnchor: [15, 15],
   popupAnchor: [0, -15],
