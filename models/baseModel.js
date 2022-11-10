@@ -10,6 +10,7 @@ const baseSchema = new Schema({
     coordinates: {
       type: Array,
       required: [true, "Marker is required"],
+      unique: true,
     }
   },
   
@@ -20,6 +21,7 @@ const baseSchema = new Schema({
     coordinates: {
       type: Array,
       required: [true, "Line is required"],
+      unique: true,
     }
   },
 
@@ -30,6 +32,7 @@ const baseSchema = new Schema({
     coordinates: {
       type: Array,
       required: [true, "Polygon is required"],
+      unique: true,
     }
   },
 
@@ -40,6 +43,7 @@ const baseSchema = new Schema({
     coordinates: {
       type: Array,
       required: [true, "Rectangle is required"],
+      unique: true,
     }
   }
 });
