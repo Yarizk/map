@@ -10,9 +10,22 @@
     align-items: center;
 }
 #map { 
-    
     height: 80vh;
     width: 100%;
-    margin: 2rem auto;
+    margin: 5rem auto;
 }
+.card{
+    white-space: nowrap;
+    
+}
+.accordion{
+    margin-bottom: 5rem;
+}
+
+.collapse{
+    margin: 2rem auto;
+    width: 90%;
+}
+
+
 
