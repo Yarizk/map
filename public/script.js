@@ -13,7 +13,7 @@ var bounds = [
   [-85, -150],
   [85, 150],
 ];
-var image = L.imageOverlay("2.jpg", bounds).addTo(map);
+var image = L.imageOverlay("3.png", bounds).addTo(map);
 map.fitBounds(bounds);
 var layerGroup = L.layerGroup().addTo(map);
 var markerGroup = L.layerGroup().addTo(map);
@@ -245,6 +245,8 @@ async function get() {
 //post data with axios
 function save() {
   pushData();
+
+
   resetInput();
   store = [];
   var data = {
@@ -257,6 +259,7 @@ function save() {
     .post("http://localhost:3000/save", data)
     .then((res) => {
       console.log("post succes" + res);
+      clear();
       document.getElementsByClassName("warning")[0].textContent =
       "Data saved";
     })
@@ -271,5 +274,6 @@ function save() {
       document.getElementsByClassName("warning")[0].appendChild(br);
       document.getElementsByClassName("warning")[0].appendChild(href);
     });
-  clear();
+
+
 }
