@@ -49,9 +49,34 @@
 
 .icon{
     width: 1rem;
-    height: 1rem;
     margin-left: 0.5rem;
     margin-right: 1rem;
+}
+.icon-marker{
+    width:1.5rem;
+}
+.default{
+    width:1.5rem;
+
+}
+.choose-marker:disabled{
+    background-color: #dadcdd !important;
+}
+#color-picker:disabled{
+    background-color: #e5e8e9 !important;
+}
+.dropdown-item{
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+.dropdown-menu{
+    min-width: 0 !important;
+    
+}
+.dropdown-menu.show {
+    transform: translate3d(50px, 38px, 0px) !important;
+    display: flex !important;
+
 }
 
 

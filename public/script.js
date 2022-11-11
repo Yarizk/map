@@ -32,7 +32,24 @@ function choose() {
     } else if (ele[i].checked) {
       window[ele[i].value] = true;
     }
+  
+  if (window[ele[i].value] == true && ele[i].value == "marker") {
+    console.log(document.getElementsByClassName("choose-marker")[0]);
+    document.getElementsByClassName("choose-marker")[0].disabled = false;
+    
+    }else if (window[ele[i].value] == true && ele[i].value != "marker"){
+      document.getElementsByClassName("choose-marker")[0].disabled = true;
+    }  
+    
+  if (window[ele[i].value] == true && ele[i].value != "marker" && ele[i].value != "hand"){
+      document.getElementById("color-picker").disabled = false;
+    } else if(window[ele[i].value] == true && ele[i].value == "marker" || ele[i].value == "hand"){
+      document.getElementById("color-picker").value = "";
+      document.getElementById("color-picker").disabled = true;
+    }
+  
   }
+ 
 }
 
 var lineArray = [],
@@ -60,7 +77,8 @@ function pushData() {
         eval(ele[i].value + "Popup.push(popupa())");
       } else if (window[ele[i].value] == true && ele[i].value == "marker") {
         markerPopup.push(popupa());
-      }
+        
+      } 
     }
   }
   if (rectangle == true && rectangleArray.length != 0) {
@@ -148,7 +166,7 @@ map.on("click", async function (e) {
   } else if (marker == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     markerArray.push([e.latlng.lat, e.latlng.lng]);
-    addMarker(e.latlng.lat, e.latlng.lng, popupa());
+    addMarker(e.latlng.lat, e.latlng.lng, popupa(), myIcon());
   } else if (polygon == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     drawPolygon(store, popupa());
@@ -171,12 +189,16 @@ map.on("click", async function (e) {
 });
 
 // custom map marker
-var myIcon = L.icon({
-  iconUrl: "./svg/map.svg",
-  iconSize: [30, 30],
-  iconAnchor: [15, 15],
-  popupAnchor: [0, -15],
-});
+function myIcon(){
+  let icon = L.icon({
+    iconUrl: document.getElementsByClassName("default")[0].src,
+    iconSize: [30, 40],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -15],
+  });
+  return icon;
+}
+
 
 function popupa() {
   var popupTitle = document.getElementById("inputtitle");
@@ -184,8 +206,8 @@ function popupa() {
   return `<p>${popupTitle.value}<br/>${popupDescription.value}</p>`;
 }
 
-function addMarker(lat, long, popup) {
-  component = L.marker([lat, long], { icon: myIcon })
+function addMarker(lat, long, popup,icon) {
+  component = L.marker([lat, long], { icon: icon })
     .bindPopup(popup)
     .addTo(map);
   component.addTo(markerGroup);
@@ -203,6 +225,15 @@ function drawRectangle(array, popup) {
   component.addTo(layerGroup);
 }
 
+
+for (var i = 0; i < document.getElementsByClassName("icon-marker").length; i++) {
+  document.getElementsByClassName("icon-marker")[i].addEventListener("click", function (item) {
+    console.log(item.target.src);
+  document.getElementsByClassName("default")[0].src = item.target.src;
+  });
+}
+
+
 async function get() {
   resetInput();
   const response = await axios.get("http://localhost:3000/get");
@@ -215,10 +246,11 @@ async function get() {
         addMarker(
           data[j].marker.coordinates[i][0],
           data[j].marker.coordinates[i][1],
-          data[j].marker.popup[i]
+          data[j].marker.popup[i],
+          myIcon()
         );
       } else {
-        L.marker(data[j].marker.coordinates[i], { icon: myIcon }).addTo(
+        L.marker(data[j].marker.coordinates[i], { icon: myIcon() }).addTo(
           markerGroup
         );
       }

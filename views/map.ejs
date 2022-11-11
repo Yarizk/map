@@ -7,134 +7,155 @@
                     <h1 class="center">CRUX WORLD MAP</h1>
                 </div>
                 <div id="map"></div>
-                <%- include("./column.ejs") %>
-                    <div class="accordion" id="accordionExample">
-                        <div class="card">
-                            <div class="card-header" id="headingOne">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button"
-                                        data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                                        aria-controls="collapseOne">
-                                        <i class="bi bi-plus-circle"></i>
-                                        Tambah component
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-                                data-parent="#accordionExample">
-                                <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
-                                    <div class="col-sm-10 mb-2">
-                                        <input type="text" class="form-control" id="inputtitle" placeholder="Title">
-                                    </div>
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Description</label>
-                                    <div class="col-sm-10 mb-2">
-                                        <input type="text" class="form-control" id="inputDescription"
-                                            placeholder="Description">
-                                    </div>
-                                    <div class="col-sm-2 mb-2">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label ">Information</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label ">Temperature</label>
-                                        <div class="col-xs-1 ml-1 mb-2">
-                                            <input type="text" class="form-control " readonly id="inputTemp"
-                                                placeholder="Temperature">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label ">AQI</label>
-                                        <div class="col-xs-3 mb-2">
-                                            <input type="text" class="form-control " readonly id="inputAir"
-                                                placeholder="Air Quality">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label ">Weather</label>
-                                        <div class="col-xs-3  mb-2 weather">
-                                            <img src="" class="card" alt="" id="inputWeatherImg">
-                                            <input type="text" class="form-control " readonly id="inputWeather"
-                                                placeholder="Weather">
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <fieldset class="form-group">
-                                    <div class="row">
-                                        <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                                        <div class="col-sm-10">
-                                            <input type="radio" name="choose" id="hand" value="hand"
-                                                onchange="choose()">
-                                            <label for="Hand"><img class="icon" src="./svg/hand.svg">Hand</label> <br>
-                                            <input type="radio" name="choose" id="marker" value="marker"
-                                                onchange="choose()">
-                                            <label for="Markers"><img class="icon"
-                                                    src="./svg/geo-alt.svg">Markers</label><br>
-                                            <input type="radio" name="choose" id="line" value="line"
-                                                onchange="choose()">
-                                            <label for="Polyline"><img class="icon"
-                                                    src="./svg/polyline.svg">Polyline</label><br>
-                                            <input type="radio" name="choose" id="polygon" value="polygon"
-                                                onchange="choose()">
-                                            <label for="Polyline"> <img class="icon"
-                                                    src="./svg/polygon.svg">Polygon</label><br>
-                                            <input type="radio" name="choose" id="rectangle" value="rectangle"
-                                                onchange="choose()">
-                                            <label for="Polyline"><img class="icon"
-                                                    src="./svg/square.svg">Rectangle</label><br>
-                                            <input type="radio" name="choose" id="circle" value="circle"
-                                                onchange="choose()">
-                                            <label for="Polyline"><img class="icon"
-                                                    src="./svg/circle.svg">Circle</label><br>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <div class="form-group row">
-                                    <div class="col-sm-10">
-                                        <div class="warning"></div>
-                                        <button class="btn btn-danger" onclick="reset()">Clear</button>
-                                        <button class="btn btn-primary" onclick="save()">Save</button>
-                                        <button class="btn btn-info" onclick="get()">Load</button>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="card-header" id="headingTwo">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button"
-                                        data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-                                        aria-controls="collapseTwo">
-                                        <i class="bi bi-pen"></i>
-                                        Edit component
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
-                                data-parent="#accordionExample">
-                                dasdnjasdnjasdnjasdnaldnalkdnaslkdnaklnd
-                            </div>
-
-                            <div class="card-header" id="headingThree">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button"
-                                        data-toggle="collapse" data-target="#collapseThree" aria-expanded="true"
-                                        aria-controls="collapseThree">
-                                        <i class="bi bi-trash"></i>
-                                        Hapus component
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="collapseThree" class="collapse show" aria-labelledby="headingThree"
-                                data-parent="#accordionExample">
-                                bingung cara apusnya bg T_T</div>
-
+                <div class="accordion" id="accordionExample">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <i class="bi bi-plus-circle"></i>
+                                    Tambah component
+                                </button>
+                            </h2>
                         </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                            data-parent="#accordionExample">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
+                                <div class="col-sm-10 mb-2">
+                                    <input type="text" class="form-control" id="inputtitle" placeholder="Title">
+                                </div>
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Description</label>
+                                <div class="col-sm-10 mb-2">
+                                    <input type="text" class="form-control" id="inputDescription"
+                                        placeholder="Description">
+                                </div>
+                                <div class="col-sm-2 mb-2">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label ">Information</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label ">Temperature</label>
+                                    <div class="col-xs-1 ml-1 mb-2">
+                                        <input type="text" class="form-control " readonly id="inputTemp"
+                                            placeholder="Temperature">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label ">AQI</label>
+                                    <div class="col-xs-3 mb-2">
+                                        <input type="text" class="form-control " readonly id="inputAir"
+                                            placeholder="Air Quality">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label ">Weather</label>
+                                    <div class="col-xs-3  mb-2 weather">
+                                        <img src="" class="card" alt="" id="inputWeatherImg">
+                                        <input type="text" class="form-control " readonly id="inputWeather"
+                                            placeholder="Weather">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                                    <div class="col-sm-10">
+                                        <input type="radio" name="choose" id="hand" value="hand" onchange="choose()">
+                                        <label for="Hand"><img class="icon" src="./svg/hand.svg">Hand</label> <br>
+                                        <input type="radio" name="choose" id="marker" value="marker"
+                                            onchange="choose()">
+                                        <label for="Markers"><img class="icon" src="./svg/geo-alt.svg">Markers</label>
+                                        <div class="btn-group">
+                                            <button disabled type="button"
+                                                class="btn btn-light dropdown-toggle choose-marker"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <img class="default" src="./svg/geo-alt.svg">
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right flex flex-row">
+                                                <button src="./marker/1.png" class="dropdown-item" type="button"><img
+                                                        class="icon-marker" src="./marker/1.png"></button>
+                                                <button class="dropdown-item" type="button"><img class="icon-marker"
+                                                        src="./marker/2.png"></button>
+                                                <button class="dropdown-item" type="button"><img class="icon-marker"
+                                                        src="./marker/3.png"></button>
+                                                <button class="dropdown-item" type="button"><img class="icon-marker"
+                                                        src="./marker/4.png"></button>
+                                                <button class="dropdown-item" type="button"><img class="icon-marker"
+                                                        src="./marker/5.png"></button>
+                                                <button class="dropdown-item" type="button"><img class="icon-marker"
+                                                        src="./marker/6.png"></button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <input type="radio" name="choose" id="line" value="line" onchange="choose()">
+                                        <label for="Polyline"><img class="icon"
+                                                src="./svg/polyline.svg">Polyline</label><br>
+                                        <input type="radio" name="choose" id="polygon" value="polygon"
+                                            onchange="choose()">
+                                        <label for="Polyline"> <img class="icon"
+                                                src="./svg/polygon.svg">Polygon</label><br>
+                                        <input type="radio" name="choose" id="rectangle" value="rectangle"
+                                            onchange="choose()">
+                                        <label for="Polyline"><img class="icon"
+                                                src="./svg/square.svg">Rectangle</label><br>
+                                        <input type="radio" name="choose" id="circle" value="circle"
+                                            onchange="choose()">
+                                        <label for="Polyline"><img class="icon"
+                                                src="./svg/circle.svg">Circle</label><br>
+                                    </div>
+                                    <legend class="col-form-label col-sm-2 pt-0">Color picker</legend>
+                                    <div class="col-sm-4">
+                                        <input class="form-control"  id="color-picker" type="text" />
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <div class="warning"></div>
+                                    <button class="btn btn-danger" onclick="reset()">Clear</button>
+                                    <button class="btn btn-primary" onclick="save()">Save</button>
+                                    <button class="btn btn-info" onclick="get()">Load</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                    data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    <i class="bi bi-pen"></i>
+                                    Edit component
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
+                            data-parent="#accordionExample">
+                            dasdnjasdnjasdnjasdnaldnalkdnaslkdnaklnd
+                        </div>
+
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                    data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                    <i class="bi bi-trash"></i>
+                                    Hapus component
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseThree" class="collapse show" aria-labelledby="headingThree"
+                            data-parent="#accordionExample">
+                            bingung cara apusnya bg T_T</div>
+
                     </div>
-                    <div class="footer">
-                        <p>© aku</p>
-                    </div>
+                </div>
+                <div class="footer">
+                    <p>© aku</p>
+                </div>
             </div>
+
 
     </body>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -146,8 +167,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
         crossorigin="anonymous"></script>
-
-
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/js/bootstrap-colorpicker.js"> </script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.2.0/js/bootstrap-colorpicker.min.js"> </script>
+    <script>
+        $(function () {
+            $('#color-picker').colorpicker();
+        });
+        document.getElementById("color-picker").addEventListener("click", function () {
+            var color = document.getElementById("color-picker").value;
+            console.log(color);
+        });
+    </script>
 
 
     </html>
