@@ -26,7 +26,6 @@ function choose() {
   var ele = document.getElementsByName("choose");
   store = [];
   for (i = 0; i < ele.length; i++) {
-    console.log(ele[i].value);
     if (!ele[i].checked) {
       window[ele[i].value] = false;
     } else if (ele[i].checked) {
@@ -34,7 +33,6 @@ function choose() {
     }
   
   if (window[ele[i].value] == true && ele[i].value == "marker") {
-    console.log(document.getElementsByClassName("choose-marker")[0]);
     document.getElementsByClassName("choose-marker")[0].disabled = false;
     
     }else if (window[ele[i].value] == true && ele[i].value != "marker"){
@@ -62,6 +60,12 @@ var lineArray = [],
   linePopup = [],
   polygonPopup = [],
   rectanglePopup = [];
+  markerColor = [],
+  lineColor = [],
+  polygonColor = [],
+  rectangleColor = [];
+
+
 var store = [];
 var hand, line, marker, polygon, rectangle, circle, component;
 
@@ -75,15 +79,14 @@ function pushData() {
       if (window[ele[i].value] == true && ele[i].value != "marker") {
         eval(ele[i].value + "Array.push(store)");
         eval(ele[i].value + "Popup.push(popupa())");
-      } else if (window[ele[i].value] == true && ele[i].value == "marker") {
-        markerPopup.push(popupa());
-        
-      } 
-    }
+        eval(ele[i].value + "Color.push(getColor())");
+      }}
   }
   if (rectangle == true && rectangleArray.length != 0) {
     rectanglePopup.push(popupa());
+    rectangleColor.push(getColor());
   }
+  console.log(markerColor)
   component = undefined;
 }
 
@@ -113,6 +116,11 @@ function clear() {
   linePopup = [];
   polygonPopup = [];
   rectanglePopup = [];
+  markerColor = [];
+  lineColor = [];
+  polygonColor = [];
+  rectangleColor = [];
+  handArray = [];
   store = [];
   document.getElementsByClassName("warning")[0].textContent =
   "Component cleared";
@@ -155,26 +163,28 @@ map.on("click", async function (e) {
   if (hand == true) {
     aqi = await getAQI(e.latlng.lat, e.latlng.lng);
     temp = await getTemp(e.latlng.lat, e.latlng.lng);
-    L.marker([e.latlng.lat, e.latlng.lng])
+    L.marker([e.latlng.lat, e.latlng.lng] , {icon: myIcon("./marker/default.png")})
       .bindTooltip(
         `<p>Temp : ${temp[0]}<br/>Weather : ${temp[1]} <br/> AQI : ${aqi}<p/> <img src="${temp[2]}" alt="weather icon" width="50" height="50">`,
       )
       .addTo(handGroup);
   } else if (line == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawLine(store, popupa());
+    drawLine(store, popupa() , getColor());
   } else if (marker == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     markerArray.push([e.latlng.lat, e.latlng.lng]);
-    addMarker(e.latlng.lat, e.latlng.lng, popupa(), myIcon());
+    markerPopup.push(popupa());
+    markerColor.push(document.getElementsByClassName("default")[0].src);
+    addMarker(e.latlng.lat, e.latlng.lng, popupa(), myIcon(document.getElementsByClassName("default")[0].src));
   } else if (polygon == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawPolygon(store, popupa());
+    drawPolygon(store, popupa(), getColor());
   } else if (rectangle == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     if (store[1] != undefined) {
       rectangleArray.push(store);
-      drawRectangle(store, popupa());
+      drawRectangle(store, popupa() , getColor());
       store = [];
     }
   }
@@ -189,9 +199,9 @@ map.on("click", async function (e) {
 });
 
 // custom map marker
-function myIcon(){
+function myIcon(marker){
   let icon = L.icon({
-    iconUrl: document.getElementsByClassName("default")[0].src,
+    iconUrl: marker,
     iconSize: [30, 40],
     iconAnchor: [15, 15],
     popupAnchor: [0, -15],
@@ -206,22 +216,30 @@ function popupa() {
   return `<p>${popupTitle.value}<br/>${popupDescription.value}</p>`;
 }
 
+function getColor() {
+  var color = document.getElementById("color-picker").value;
+  if(color == ""){
+    color = "red";
+  }
+  return color;
+}
+
 function addMarker(lat, long, popup,icon) {
   component = L.marker([lat, long], { icon: icon })
     .bindPopup(popup)
     .addTo(map);
   component.addTo(markerGroup);
 }
-function drawLine(array, popup) {
-  component = L.polyline(array, { color: "red" }).bindPopup(popup).addTo(map);
+function drawLine(array, popup, color) {
+  component = L.polyline(array, { color: color }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
-function drawPolygon(array, popup) {
-  component = L.polygon(array, { color: "red" }).bindPopup(popup).addTo(map);
+function drawPolygon(array, popup,color) {
+  component = L.polygon(array, { color: color }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
-function drawRectangle(array, popup) {
-  component = L.rectangle(array, { color: "red" }).bindPopup(popup).addTo(map);
+function drawRectangle(array, popup,color) {
+  component = L.rectangle(array, { color: color }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
 
@@ -247,7 +265,7 @@ async function get() {
           data[j].marker.coordinates[i][0],
           data[j].marker.coordinates[i][1],
           data[j].marker.popup[i],
-          myIcon()
+          myIcon(data[j].marker.color[i])
         );
       } else {
         L.marker(data[j].marker.coordinates[i], { icon: myIcon() }).addTo(
@@ -256,10 +274,10 @@ async function get() {
       }
     }
     for (let i = 0; i < data[j].line.coordinates.length; i++) {
-      drawLine(data[j].line.coordinates[i], data[j].line.popup[i]);
+      drawLine(data[j].line.coordinates[i], data[j].line.popup[i] , data[j].line.color[i]);
     }
     for (let i = 0; i < data[j].polygon.coordinates.length; i++) {
-      drawPolygon(data[j].polygon.coordinates[i], data[j].polygon.popup[i]);
+      drawPolygon(data[j].polygon.coordinates[i], data[j].polygon.popup[i], data[j].polygon.color[i]);
     }
     for (let i = 0; i < data[j].rectangle.coordinates.length; i++) {
       if (data[j].rectangle.coordinates[i] == undefined) {
@@ -267,7 +285,8 @@ async function get() {
       } else {
         drawRectangle(
           data[j].rectangle.coordinates[i],
-          data[j].rectangle.popup[i]
+          data[j].rectangle.popup[i],
+          data[j].rectangle.color[i]
         );
       }
     }
@@ -277,15 +296,13 @@ async function get() {
 //post data with axios
 function save() {
   pushData();
-
-
   resetInput();
   store = [];
   var data = {
-    marker: { popup: markerPopup, coordinates: markerArray },
-    line: { popup: linePopup, coordinates: lineArray },
-    polygon: { popup: polygonPopup, coordinates: polygonArray },
-    rectangle: { popup: rectanglePopup, coordinates: rectangleArray },
+    marker: { color:markerColor, popup: markerPopup, coordinates: markerArray },
+    line: { color : lineColor, popup: linePopup, coordinates: lineArray },
+    polygon: { color: polygonColor, popup: polygonPopup, coordinates: polygonArray },
+    rectangle: { color : rectangleColor, popup: rectanglePopup, coordinates: rectangleArray },
   };
   axios
     .post("http://localhost:3000/save", data)

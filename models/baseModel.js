@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 
 const baseSchema = new Schema({
   marker: {
+    color : {
+      type: Array},
     popup: {
       type: Array,
     },
@@ -14,6 +16,8 @@ const baseSchema = new Schema({
   },
   
   line: {
+    color : {
+      type: Array},
     popup: {
       type: Array,
     },
@@ -24,6 +28,8 @@ const baseSchema = new Schema({
   },
 
   polygon: {
+    color : {
+      type: Array},
     popup: {
       type: Array,
     },
@@ -34,6 +40,8 @@ const baseSchema = new Schema({
   },
 
   rectangle: {
+    color : {
+      type: Array},
     popup: {
       type: Array,
     },
