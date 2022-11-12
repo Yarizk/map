@@ -86,7 +86,6 @@ function pushData() {
     rectanglePopup.push(popupa());
     rectangleColor.push(getColor());
   }
-  console.log(markerColor)
   component = undefined;
 }
 
@@ -165,7 +164,10 @@ map.on("click", async function (e) {
     temp = await getTemp(e.latlng.lat, e.latlng.lng);
     L.marker([e.latlng.lat, e.latlng.lng] , {icon: myIcon("./marker/default.png")})
       .bindTooltip(
-        `<p>Temp : ${temp[0]}<br/>Weather : ${temp[1]} <br/> AQI : ${aqi}<p/> <img src="${temp[2]}" alt="weather icon" width="50" height="50">`,
+        `<div>
+        <h2 class="tooltip-Style">Map Information</h2>
+        <p>Temp : ${temp[0]}<br/>Weather : ${temp[1]} <br/> AQI : ${aqi}<p/> 
+        <img src="${temp[2]}" alt="weather icon" width="50" height="50"> <div/>`,
       )
       .addTo(handGroup);
   } else if (line == true) {
@@ -198,6 +200,8 @@ map.on("click", async function (e) {
   document.getElementById("inputAir").value = aqi;
 });
 
+
+
 // custom map marker
 function myIcon(marker){
   let icon = L.icon({
@@ -209,11 +213,14 @@ function myIcon(marker){
   return icon;
 }
 
-
 function popupa() {
   var popupTitle = document.getElementById("inputtitle");
   var popupDescription = document.getElementById("inputDescription");
-  return `<p>${popupTitle.value}<br/>${popupDescription.value}</p>`;
+  return `
+  <div>
+    <h4>${popupTitle.value}</h4>
+    <p>${popupDescription.value}</p>
+  <div/>`;
 }
 
 function getColor() {

@@ -76,7 +76,33 @@
 .dropdown-menu.show {
     transform: translate3d(50px, 38px, 0px) !important;
     display: flex !important;
-
 }
 
+.leaflet-popup-content{
+    margin:0;
+}
+.leaflet-popup-content-wrapper{
+    padding:0;
+    overflow: hidden;
+}
+
+.leaflet-popup-content-wrapper h4{
+ padding: 0.5rem;
+ background-color: rgb(0, 205, 137);
+ color: #fff;
+ font-size: 1rem;
+ text-align: center;
+}
+.leaflet-popup-content-wrapper p{
+    padding:0 6px;
+    font-size: 0.7rem;
+    margin-bottom: 0.8rem;
+}
+.tooltip-Style{
+    padding: 0.5rem;
+    background-color: rgb(0, 205, 137);
+    color: #fff;
+    font-size: 1rem;
+    text-align: center;
+}
 
