@@ -261,7 +261,7 @@ for (var i = 0; i < document.getElementsByClassName("icon-marker").length; i++) 
 
 async function get() {
   resetInput();
-  const response = await axios.get("http://localhost:3000/get");
+  const response = await axios.get("/get");
   document.getElementsByClassName("warning")[0].textContent =
   "Data loaded successfully";
   const data = response.data;
@@ -312,7 +312,7 @@ function save() {
     rectangle: { color : rectangleColor, popup: rectanglePopup, coordinates: rectangleArray },
   };
   axios
-    .post("http://localhost:3000/save", data)
+    .post("/save", data)
     .then((res) => {
       console.log("post succes" + res);
       clear();
