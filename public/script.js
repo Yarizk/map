@@ -20,8 +20,7 @@ var markerGroup = L.layerGroup().addTo(map);
 var handGroup = L.layerGroup().addTo(map);
 
 function choose() {
-  document.getElementsByClassName("warning")[0].textContent =
-  "";
+  document.getElementsByClassName("warning")[0].textContent = "";
   pushData();
   var ele = document.getElementsByName("choose");
   store = [];
@@ -31,23 +30,27 @@ function choose() {
     } else if (ele[i].checked) {
       window[ele[i].value] = true;
     }
-  
-  if (window[ele[i].value] == true && ele[i].value == "marker") {
-    document.getElementsByClassName("choose-marker")[0].disabled = false;
-    
-    }else if (window[ele[i].value] == true && ele[i].value != "marker"){
+
+    if (window[ele[i].value] == true && ele[i].value == "marker") {
+      document.getElementsByClassName("choose-marker")[0].disabled = false;
+    } else if (window[ele[i].value] == true && ele[i].value != "marker") {
       document.getElementsByClassName("choose-marker")[0].disabled = true;
-    }  
-    
-  if (window[ele[i].value] == true && ele[i].value != "marker" && ele[i].value != "hand"){
+    }
+
+    if (
+      window[ele[i].value] == true &&
+      ele[i].value != "marker" &&
+      ele[i].value != "hand"
+    ) {
       document.getElementById("color-picker").disabled = false;
-    } else if(window[ele[i].value] == true && ele[i].value == "marker" || ele[i].value == "hand"){
+    } else if (
+      (window[ele[i].value] == true && ele[i].value == "marker") ||
+      ele[i].value == "hand"
+    ) {
       document.getElementById("color-picker").value = "";
       document.getElementById("color-picker").disabled = true;
     }
-  
   }
- 
 }
 
 var lineArray = [],
@@ -60,11 +63,10 @@ var lineArray = [],
   linePopup = [],
   polygonPopup = [],
   rectanglePopup = [];
-  markerColor = [],
-  lineColor = [],
-  polygonColor = [],
-  rectangleColor = [];
-
+(markerColor = []),
+  (lineColor = []),
+  (polygonColor = []),
+  (rectangleColor = []);
 
 var store = [];
 var hand, line, marker, polygon, rectangle, circle, component;
@@ -80,7 +82,8 @@ function pushData() {
         eval(ele[i].value + "Array.push(store)");
         eval(ele[i].value + "Popup.push(popupa())");
         eval(ele[i].value + "Color.push(getColor())");
-      }}
+      }
+    }
   }
   if (rectangle == true && rectangleArray.length != 0) {
     rectanglePopup.push(popupa());
@@ -89,7 +92,7 @@ function pushData() {
   component = undefined;
 }
 
-function resetInput(){
+function resetInput() {
   document.getElementById("inputtitle").value = "";
   document.getElementById("inputDescription").value = "";
   var ele = document.getElementsByName("choose");
@@ -122,7 +125,7 @@ function clear() {
   handArray = [];
   store = [];
   document.getElementsByClassName("warning")[0].textContent =
-  "Component cleared";
+    "Component cleared";
 }
 
 // async await axios call
@@ -134,22 +137,23 @@ async function getTemp(lat, long) {
   );
   return [
     (parseInt(response.data.main.temp) * 5) / 4 + " °C",
-    response.data.weather[0].main, response.data.weather[0].icon
+    response.data.weather[0].main,
+    response.data.weather[0].icon,
   ];
 }
 async function getAQI(lat, long) {
   const response = await axios.get(
     `https://api.waqi.info/feed/geo:${lat};${long}/?token=4b425bd3bd6267a0e9211736d91ccea0ecf19308`
   );
-  if(response.data.data.aqi >= 0 && response.data.data.aqi < 50){
+  if (response.data.data.aqi >= 0 && response.data.data.aqi < 50) {
     return response.data.data.aqi + " (Baik)";
-  } else if (response.data.data.aqi >= 50 && response.data.data.aqi < 100){
+  } else if (response.data.data.aqi >= 50 && response.data.data.aqi < 100) {
     return response.data.data.aqi + " (Sedang)";
-  } else if (response.data.data.aqi >= 100 && response.data.data.aqi < 150){
+  } else if (response.data.data.aqi >= 100 && response.data.data.aqi < 150) {
     return response.data.data.aqi + " (Tidak Sehat)";
-  } else if (response.data.data.aqi >= 150 && response.data.data.aqi < 200){
+  } else if (response.data.data.aqi >= 150 && response.data.data.aqi < 200) {
     return response.data.data.aqi + " (Sangat Tidak Sehat)";
-  } else if (response.data.data.aqi >= 200 ){
+  } else if (response.data.data.aqi >= 200) {
     return response.data.data.aqi + " (Berbahaya)";
   } else {
     return "Tidak Tersedia";
@@ -162,23 +166,29 @@ map.on("click", async function (e) {
   if (hand == true) {
     aqi = await getAQI(e.latlng.lat, e.latlng.lng);
     temp = await getTemp(e.latlng.lat, e.latlng.lng);
-    L.marker([e.latlng.lat, e.latlng.lng] , {icon: myIcon("./marker/default.png")})
+    L.marker([e.latlng.lat, e.latlng.lng], {
+      icon: myIcon("./marker/default.png"),
+    })
       .bindTooltip(
-        `<div>
-        <h2 class="tooltip-Style">Map Information</h2>
+        `<div><h2 class="tooltip-Style">Map Information</h2>
         <p>Temp : ${temp[0]}<br/>Weather : ${temp[1]} <br/> AQI : ${aqi}<p/> 
-        <img src="${temp[2]}" alt="weather icon" width="50" height="50"> <div/>`,
+        <img src="${temp[2]}" alt="weather icon" width="50" height="50"> <div/>`
       )
       .addTo(handGroup);
   } else if (line == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawLine(store, popupa() , getColor());
+    drawLine(store, popupa(), getColor());
   } else if (marker == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     markerArray.push([e.latlng.lat, e.latlng.lng]);
     markerPopup.push(popupa());
     markerColor.push(document.getElementsByClassName("default")[0].src);
-    addMarker(e.latlng.lat, e.latlng.lng, popupa(), myIcon(document.getElementsByClassName("default")[0].src));
+    addMarker(
+      e.latlng.lat,
+      e.latlng.lng,
+      popupa(),
+      myIcon(document.getElementsByClassName("default")[0].src)
+    );
   } else if (polygon == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     drawPolygon(store, popupa(), getColor());
@@ -186,7 +196,7 @@ map.on("click", async function (e) {
     store.push([e.latlng.lat, e.latlng.lng]);
     if (store[1] != undefined) {
       rectangleArray.push(store);
-      drawRectangle(store, popupa() , getColor());
+      drawRectangle(store, popupa(), getColor());
       store = [];
     }
   }
@@ -200,10 +210,8 @@ map.on("click", async function (e) {
   document.getElementById("inputAir").value = aqi;
 });
 
-
-
 // custom map marker
-function myIcon(marker){
+function myIcon(marker) {
   let icon = L.icon({
     iconUrl: marker,
     iconSize: [30, 40],
@@ -225,76 +233,73 @@ function popupa() {
 
 function getColor() {
   var color = document.getElementById("color-picker").value;
-  if(color == ""){
+  if (color == "") {
     color = "red";
   }
   return color;
 }
 
-function addMarker(lat, long, popup,icon) {
-  component = L.marker([lat, long], { icon: icon })
-    .bindPopup(popup)
-    .addTo(map);
+function addMarker(lat, long, popup, icon) {
+  component = L.marker([lat, long], { icon: icon }).bindPopup(popup).addTo(map);
   component.addTo(markerGroup);
 }
 function drawLine(array, popup, color) {
   component = L.polyline(array, { color: color }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
-function drawPolygon(array, popup,color) {
+function drawPolygon(array, popup, color) {
   component = L.polygon(array, { color: color }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
-function drawRectangle(array, popup,color) {
+function drawRectangle(array, popup, color) {
   component = L.rectangle(array, { color: color }).bindPopup(popup).addTo(map);
   component.addTo(layerGroup);
 }
 
-
-for (var i = 0; i < document.getElementsByClassName("icon-marker").length; i++) {
-  document.getElementsByClassName("icon-marker")[i].addEventListener("click", function (item) {
-    console.log(item.target.src);
-  document.getElementsByClassName("default")[0].src = item.target.src;
-  });
+for (
+  var i = 0;
+  i < document.getElementsByClassName("icon-marker").length;
+  i++
+) {
+  document
+    .getElementsByClassName("icon-marker")
+    [i].addEventListener("click", function (item) {
+      console.log(item.target.src);
+      document.getElementsByClassName("default")[0].src = item.target.src;
+    });
 }
-
 
 async function get() {
   resetInput();
   const response = await axios.get("/get");
   document.getElementsByClassName("warning")[0].textContent =
-  "Data loaded successfully";
+    "Data loaded successfully";
   const data = response.data;
+
   for (let j = 0; j < data.length; j++) {
-    for (let i = 0; i < data[j].marker.coordinates.length; i++) {
-      if (data[j].marker.popup[i] != null) {
+    if (data[j].type == "marker") {
+      if (data[j].popup[i] != null) {
         addMarker(
-          data[j].marker.coordinates[i][0],
-          data[j].marker.coordinates[i][1],
-          data[j].marker.popup[i],
-          myIcon(data[j].marker.color[i])
+          data[j].coordinates[0],
+          data[j].coordinates[1],
+          data[j].popup,
+          myIcon(data[j].color)
         );
       } else {
-        L.marker(data[j].marker.coordinates[i], { icon: myIcon() }).addTo(
-          markerGroup
-        );
+        L.marker(data[j].coordinates, { icon: myIcon() }).addTo(markerGroup);
       }
     }
-    for (let i = 0; i < data[j].line.coordinates.length; i++) {
-      drawLine(data[j].line.coordinates[i], data[j].line.popup[i] , data[j].line.color[i]);
+    if (data[j].type == "line") {
+      drawLine(data[j].coordinates, data[j].popup, data[j].color);
     }
-    for (let i = 0; i < data[j].polygon.coordinates.length; i++) {
-      drawPolygon(data[j].polygon.coordinates[i], data[j].polygon.popup[i], data[j].polygon.color[i]);
+    if (data[j].type == "polygon") {
+      drawPolygon(data[j].coordinates, data[j].popup, data[j].color);
     }
-    for (let i = 0; i < data[j].rectangle.coordinates.length; i++) {
-      if (data[j].rectangle.coordinates[i] == undefined) {
+    if (data[j].type == "rectangle") {
+      if (data[j].coordinates == undefined) {
         continue;
       } else {
-        drawRectangle(
-          data[j].rectangle.coordinates[i],
-          data[j].rectangle.popup[i],
-          data[j].rectangle.color[i]
-        );
+        drawRectangle(data[j].coordinates, data[j].popup, data[j].color);
       }
     }
   }
@@ -305,31 +310,115 @@ function save() {
   pushData();
   resetInput();
   store = [];
-  var data = {
-    marker: { color:markerColor, popup: markerPopup, coordinates: markerArray },
-    line: { color : lineColor, popup: linePopup, coordinates: lineArray },
-    polygon: { color: polygonColor, popup: polygonPopup, coordinates: polygonArray },
-    rectangle: { color : rectangleColor, popup: rectanglePopup, coordinates: rectangleArray },
-  };
-  axios
-    .post("/save", data)
-    .then((res) => {
-      console.log("post succes" + res);
-      clear();
-      document.getElementsByClassName("warning")[0].textContent =
-      "Data saved";
-    })
-    .catch((err) => {
-      console.log(err);
-      document.getElementsByClassName("warning")[0].textContent =
-        "You harus register to nyimpen data";
-      const href = document.createElement("a");
-      href.setAttribute("href", "/register");
-      href.textContent = "Register here";
-      const br = document.createElement("br");
-      document.getElementsByClassName("warning")[0].appendChild(br);
-      document.getElementsByClassName("warning")[0].appendChild(href);
-    });
-
-
+  saveComponent();
+  // clear();
+  // document.getElementsByClassName("warning")[0].textContent =
+  //   "Data saved successfully";
 }
+
+function saveComponent() {
+  for (var i = 0; i < markerArray.length; i++) {
+    var payload = {
+      type: "marker",
+      color: markerColor[i],
+      popup: markerPopup[i],
+      coordinates: markerArray[i],
+    };
+    axios
+      .post("/save", payload)
+      .then((res) => {
+        console.log("marker succes" + res);
+      })
+      .catch((err) => unathorizedPost(err));
+  }
+  for (var i = 0; i < lineArray.length; i++) {
+    var payload = {
+      type: "line",
+      color: lineColor[i],
+      popup: linePopup[i],
+      coordinates: lineArray[i],
+    };
+    axios
+      .post("/save", payload)
+      .then((res) => {
+        console.log("line succes" + res);
+      })
+      .catch((err) =>  unathorizedPost(err));
+  }
+  for (var i = 0; i < polygonArray.length; i++) {
+    var payload = {
+      type: "polygon",
+      color: polygonColor[i],
+      popup: polygonPopup[i],
+      coordinates: polygonArray[i],
+    };
+    axios
+      .post("/save", payload)
+      .then((res) => {
+        console.log("polygon succes" + res);
+      })
+      .catch((err) => unathorizedPost(err));
+  }
+  for (var i = 0; i < rectangleArray.length; i++) {
+    var payload = {
+      type: "rectangle",
+      color: rectangleColor[i],
+      popup: rectanglePopup[i],
+      coordinates: rectangleArray[i],
+    };
+    axios
+      .post("/save", payload)
+      .then((res) => {
+        console.log("rectangle succes" + res);
+      })
+      .catch((err) => {throw unathorizedPost(err)});
+  }
+
+  if(!markerArray.length && !lineArray.length && !polygonArray.length && !rectangleArray.length){
+    document.getElementsByClassName("warning")[0].textContent =
+    "No data to save";
+}}
+
+function unathorizedPost(err) {
+  console.log(err);
+  document.getElementsByClassName("warning")[0].textContent =
+    "You harus register to nyimpen data";
+  const href = document.createElement("a");
+  href.setAttribute("href", "/register");
+  href.textContent = "Register here";
+  const br = document.createElement("br");
+  document.getElementsByClassName("warning")[0].appendChild(br);
+  document.getElementsByClassName("warning")[0].appendChild(href);
+}
+// for(var i = 0; i < markerGroup.getLayers().length; i++){
+//   markerArray.push(markerGroup.getLayers()[i]._latlng);
+//   markerPopup.push(markerGroup.getLayers()[i]._popup._content);
+//   markerColor.push(markerGroup.getLayers()[i]._icon.src);
+// }
+
+// var data = {
+//   marker: { color:markerColor, popup: markerPopup, coordinates: markerArray },
+//   line: { color : lineColor, popup: linePopup, coordinates: lineArray },
+//   polygon: { color: polygonColor, popup: polygonPopup, coordinates: polygonArray },
+//   rectangle: { color : rectangleColor, popup: rectanglePopup, coordinates: rectangleArray },
+// };
+
+// axios
+//     .post("/save", data)
+//     .then((res) => {
+//       console.log("post succes" + res);
+//       clear();
+//       document.getElementsByClassName("warning")[0].textContent =
+//       "Data saved";
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       document.getElementsByClassName("warning")[0].textContent =
+//         "You harus register to nyimpen data";
+//       const href = document.createElement("a");
+//       href.setAttribute("href", "/register");
+//       href.textContent = "Register here";
+//       const br = document.createElement("br");
+//       document.getElementsByClassName("warning")[0].appendChild(br);
+//       document.getElementsByClassName("warning")[0].appendChild(href);
+//     });

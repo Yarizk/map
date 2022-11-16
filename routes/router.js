@@ -10,12 +10,7 @@ router.route("/").get((req, res) => {
 //save data to mongodb
 // save data after authentication
 router.route("/save" ).post(checkAuth,(req, res) => {
-    const coordinates = new coordinate({
-        marker: req.body.marker,
-        line: req.body.line,
-        polygon: req.body.polygon,
-        rectangle: req.body.rectangle
-    });
+    const coordinates = new coordinate(req.body);
     console.log(coordinates);
     coordinates
         .save()
