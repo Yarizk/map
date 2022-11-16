@@ -390,35 +390,3 @@ function unathorizedPost(err) {
   document.getElementsByClassName("warning")[0].appendChild(br);
   document.getElementsByClassName("warning")[0].appendChild(href);
 }
-// for(var i = 0; i < markerGroup.getLayers().length; i++){
-//   markerArray.push(markerGroup.getLayers()[i]._latlng);
-//   markerPopup.push(markerGroup.getLayers()[i]._popup._content);
-//   markerColor.push(markerGroup.getLayers()[i]._icon.src);
-// }
-
-// var data = {
-//   marker: { color:markerColor, popup: markerPopup, coordinates: markerArray },
-//   line: { color : lineColor, popup: linePopup, coordinates: lineArray },
-//   polygon: { color: polygonColor, popup: polygonPopup, coordinates: polygonArray },
-//   rectangle: { color : rectangleColor, popup: rectanglePopup, coordinates: rectangleArray },
-// };
-
-// axios
-//     .post("/save", data)
-//     .then((res) => {
-//       console.log("post succes" + res);
-//       clear();
-//       document.getElementsByClassName("warning")[0].textContent =
-//       "Data saved";
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       document.getElementsByClassName("warning")[0].textContent =
-//         "You harus register to nyimpen data";
-//       const href = document.createElement("a");
-//       href.setAttribute("href", "/register");
-//       href.textContent = "Register here";
-//       const br = document.createElement("br");
-//       document.getElementsByClassName("warning")[0].appendChild(br);
-//       document.getElementsByClassName("warning")[0].appendChild(href);
-//     });
