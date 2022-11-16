@@ -35,6 +35,70 @@ router.route("/get").get((req, res) => {
         });
 });
 
+router.route("/delete").delete((req, res) => {
+    coordinate
+        .deleteMany()
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
+
+router.route("delete/:id").delete((req, res) => {
+    coordinate
+        .deleteOne({_id: req.params.id})
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
+
+router.route("/update/:id").put((req, res) => {
+    coordinate
+        .updateOne({_id: req.params
+        .id
+    }, {
+        $set: {
+            type: req.body.type,
+            color: req.body.color,
+            popup: req.body.popup,
+            coordinates: req.body.coordinates
+        }
+    })
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
+
+router.route("/get/:id").get((req, res) => {
+        
+    coordinate
+        .findOne({_id: req.params.id})
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
+
+router.route("/get/:type").get((req, res) => {
+    coordinate
+        .find({type: req.params.type})
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
 
 
 module.exports = router;
