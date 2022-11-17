@@ -228,7 +228,36 @@ function popupa() {
   <div>
     <h4>${popupTitle.value}</h4>
     <p>${popupDescription.value}</p>
+    //add edit delete button
+    <button class="btn btn-primary" onclick="editMarker(${markerArray.length -
+      1})">Edit</button>
+    <button class="btn btn-danger" onclick="deleteMarker(${markerArray.length -
+      1})">Delete</button>
   <div/>`;
+}
+
+function editMarker(i) {
+  //edit marker
+  if (markerArray[i] != undefined) {
+    var popupTitle = document.getElementById("inputtitle");
+    var popupDescription = document.getElementById("inputDescription");
+    markerPopup[i] = `
+    <div>
+      <h4>${popupTitle.value}</h4>
+      <p>${popupDescription.value}</p>
+      <button class="btn btn-primary" onclick="editMarker(${i})">Edit</button>
+      <button class="btn btn-danger" onclick="deleteMarker(${i})">Delete</button>
+    <div/>`;
+    markerGroup.clearLayers();
+    for (let i = 0; i < markerArray.length; i++) {
+      addMarker(
+        markerArray[i][0],
+        markerArray[i][1],
+        markerPopup[i],
+        myIcon(markerColor[i])
+      );
+    }
+  }
 }
 
 function getColor() {
@@ -240,7 +269,8 @@ function getColor() {
 }
 
 function addMarker(lat, long, popup, icon) {
-  component = L.marker([lat, long], { icon: icon }).bindPopup(popup).addTo(map);
+  component = L.marker([lat, long], { icon: icon }).bindPopup(popup).addTo(map).on("click", function (e) {
+    map.panTo(e.latlng);});
   component.addTo(markerGroup);
 }
 function drawLine(array, popup, color) {
