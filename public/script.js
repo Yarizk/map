@@ -260,6 +260,24 @@ function editMarker(i) {
   }
 }
 
+function deleteMarker(i) {
+  //delete marker
+  if (markerArray[i] != undefined) {
+    markerArray.splice(i, 1);
+    markerPopup.splice(i, 1);
+    markerColor.splice(i, 1);
+    markerGroup.clearLayers();
+    for (let i = 0; i < markerArray.length; i++) {
+      addMarker(
+        markerArray[i][0],
+        markerArray[i][1],
+        markerPopup[i],
+        myIcon(markerColor[i])
+      );
+    }
+  }
+}
+
 function getColor() {
   var color = document.getElementById("color-picker").value;
   if (color == "") {
@@ -309,6 +327,9 @@ async function get() {
   for (let j = 0; j < data.length; j++) {
     if (data[j].type == "marker") {
       if (data[j].popup[i] != null) {
+        markerArray.push(data[j].coordinates);
+        markerPopup.push(data[j].popup);
+        markerColor.push(data[j].color);
         addMarker(
           data[j].coordinates[0],
           data[j].coordinates[1],
