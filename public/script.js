@@ -177,26 +177,26 @@ map.on("click", async function (e) {
       .addTo(handGroup);
   } else if (line == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawLine(store, popupa(), getColor());
+    drawLine(store, popupa(e.latlng.lat, e.latlng.lng), getColor());
   } else if (marker == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     markerArray.push([e.latlng.lat, e.latlng.lng]);
-    markerPopup.push(popupa());
+    markerPopup.push(popupa(e.latlng.lat, e.latlng.lng));
     markerColor.push(document.getElementsByClassName("default")[0].src);
     addMarker(
       e.latlng.lat,
       e.latlng.lng,
-      popupa(),
+      popupa(e.latlng.lat, e.latlng.lng),
       myIcon(document.getElementsByClassName("default")[0].src)
     );
   } else if (polygon == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawPolygon(store, popupa(), getColor());
+    drawPolygon(store, popupa(e.latlng.lat, e.latlng.lng), getColor());
   } else if (rectangle == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     if (store[1] != undefined) {
       rectangleArray.push(store);
-      drawRectangle(store, popupa(), getColor());
+      drawRectangle(store, popupa(e.latlng.lat, e.latlng.lng), getColor());
       store = [];
     }
   }
@@ -221,7 +221,7 @@ function myIcon(marker) {
   return icon;
 }
 
-function popupa() {
+function popupa(lat,long) {
   var popupTitle = document.getElementById("inputtitle");
   var popupDescription = document.getElementById("inputDescription");
   return `
@@ -229,25 +229,20 @@ function popupa() {
     <h4>${popupTitle.value}</h4>
     <p>${popupDescription.value}</p>
     //add edit delete button
-    <button class="btn btn-primary" onclick="editMarker(${markerArray.length -
-      1})">Edit</button>
-    <button class="btn btn-danger" onclick="deleteMarker(${markerArray.length -
-      1})">Delete</button>
+    <button class="btn btn-primary" id="${lat} ${long}" onclick="editMarker(event)">Edit</button>
+    <button class="btn btn-danger" id="${lat} ${long}" onclick="deleteMarker(event)">Delete</button>
   <div/>`;
 }
 
-function editMarker(i) {
+function editMarker(event){
   //edit marker
+  var latlong = event.target.id.split(" ");
+  var lat = latlong[0];
+  var lng = latlong[1];
+  //find index of lat lang
+  var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
   if (markerArray[i] != undefined) {
-    var popupTitle = document.getElementById("inputtitle");
-    var popupDescription = document.getElementById("inputDescription");
-    markerPopup[i] = `
-    <div>
-      <h4>${popupTitle.value}</h4>
-      <p>${popupDescription.value}</p>
-      <button class="btn btn-primary" onclick="editMarker(${i})">Edit</button>
-      <button class="btn btn-danger" onclick="deleteMarker(${i})">Delete</button>
-    <div/>`;
+    markerPopup[i] = popupa(lat,lng);
     markerGroup.clearLayers();
     for (let i = 0; i < markerArray.length; i++) {
       addMarker(
@@ -257,26 +252,32 @@ function editMarker(i) {
         myIcon(markerColor[i])
       );
     }
+  }
+}
+function deleteMarker(event){
+  //getlatlong
+  var latlong = event.target.id.split(" ");
+  var lat = latlong[0];
+  var lng = latlong[1];
+  //find index of lat lang
+  var index = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
+  //remove marker from array
+  markerArray.splice(index, 1);
+  markerPopup.splice(index, 1);
+  markerColor.splice(index, 1);
+  //remove marker from map
+  markerGroup.clearLayers();
+  for (let i = 0; i < markerArray.length; i++) {
+    addMarker(
+      markerArray[i][0],
+      markerArray[i][1],
+      markerPopup[i],
+      myIcon(markerColor[i])
+    );
   }
 }
 
-function deleteMarker(i) {
-  //delete marker
-  if (markerArray[i] != undefined) {
-    markerArray.splice(i, 1);
-    markerPopup.splice(i, 1);
-    markerColor.splice(i, 1);
-    markerGroup.clearLayers();
-    for (let i = 0; i < markerArray.length; i++) {
-      addMarker(
-        markerArray[i][0],
-        markerArray[i][1],
-        markerPopup[i],
-        myIcon(markerColor[i])
-      );
-    }
-  }
-}
+
 
 function getColor() {
   var color = document.getElementById("color-picker").value;
@@ -287,7 +288,7 @@ function getColor() {
 }
 
 function addMarker(lat, long, popup, icon) {
-  component = L.marker([lat, long], { icon: icon }).bindPopup(popup).addTo(map).on("click", function (e) {
+  component = L.marker([lat, long], {  icon: icon }).bindPopup(popup).addTo(map).on("click", function (e) {
     map.panTo(e.latlng);});
   component.addTo(markerGroup);
 }
@@ -363,8 +364,8 @@ function save() {
   store = [];
   saveComponent();
   // clear();
-  // document.getElementsByClassName("warning")[0].textContent =
-  //   "Data saved successfully";
+  document.getElementsByClassName("warning")[0].textContent =
+    "Data saved successfully";
 }
 
 function saveComponent() {
