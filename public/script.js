@@ -270,6 +270,7 @@ function editMarker(event) {
     var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
     if (markerArray[i] != undefined) {
       markerPopup[i] = popupa(lat, lng, "marker");
+      markerColor[i] = document.getElementsByClassName("default")[0].src;
       markerGroup.clearLayers();
       for (let i = 0; i < markerArray.length; i++) {
         addMarker(
@@ -279,6 +280,18 @@ function editMarker(event) {
           myIcon(markerColor[i])
         );
       }
+
+      axios.put(`http://localhost:3000/update/${lat}&${lng}`, {  
+        title: popupa(lat, lng, "marker"),
+        color: document.getElementsByClassName("default")[0].src,
+      }).then((res) => {
+        console.log(res);
+      });
+    
+
+      document.getElementById("inputtitle").value = "";
+      document.getElementById("inputDescription").value = "";
+
     }
   }
 }
@@ -288,7 +301,7 @@ function deleteMarker(event) {
   var lat = latlong[0];
   var lng = latlong[1];
   var type = latlong[2];
-  var id = latlong[3];
+
   if (type == "marker") {
     //find index of lat lang
     var index = markerArray.findIndex(
@@ -309,8 +322,6 @@ function deleteMarker(event) {
         });
         ;
 
-
-    
     //remove marker from map
     markerGroup.clearLayers();
     for (let i = 0; i < markerArray.length; i++) {
@@ -427,10 +438,9 @@ function save() {
   pushData();
   resetInput();
   store = [];
-  saveComponent();
+  const s = saveComponent();
   // clear();
-  document.getElementsByClassName("warning")[0].textContent =
-    "Data saved successfully";
+  s != undefined ? document.getElementsByClassName("warning")[0].textContent = "No data to save" : document.getElementsByClassName("warning")[0].textContent = "Data saved successfully";
 }
 
 function saveComponent() {
@@ -499,8 +509,7 @@ function saveComponent() {
     !polygonArray.length &&
     !rectangleArray.length
   ) {
-    document.getElementsByClassName("warning")[0].textContent =
-      "No data to save";
+    return "No data to save";
   }
 }
 

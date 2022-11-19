@@ -47,7 +47,6 @@ router.route("/get").get((req, res) => {
 // });
 
 router.route("/deleteMarker").post((req, res) => {
-    console.log(req.body.coordinates);
     coordinate.findOneAndDelete({ coordinates: [parseFloat(req.body.coordinates[0]), parseFloat(req.body.coordinates[1]) ] }).then((data) => {
         res.json(data);
     }
@@ -57,16 +56,13 @@ router.route("/deleteMarker").post((req, res) => {
     );
 });
 
-router.route("/update/:id").put((req, res) => {
+router.route("/update/:lat&:lang").put((req, res) => {
+
     coordinate
-        .updateOne({_id: req.params
-        .id
-    }, {
+        .findOneAndUpdate({ coordinates: [parseFloat(req.params.lat), parseFloat(req.params.lang) ] }, {
         $set: {
-            type: req.body.type,
             color: req.body.color,
             popup: req.body.popup,
-            coordinates: req.body.coordinates
         }
     })
         .then((data) => {
