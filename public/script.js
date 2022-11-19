@@ -281,7 +281,7 @@ function editMarker(event) {
         );
       }
 
-      axios.put(`http://localhost:3000/update/${lat}&${lng}`, {  
+      axios.put(`http://localhost:3000/updateMarker/${lat}&${lng}`, {  
         title: popupa(lat, lng, "marker"),
         color: document.getElementsByClassName("default")[0].src,
       }).then((res) => {
@@ -293,6 +293,29 @@ function editMarker(event) {
       document.getElementById("inputDescription").value = "";
 
     }
+  }
+  else  {
+    eval("var index = " + type + "Array.findIndex((item) => item[item.length-1][0] == lat && item[item.length-1][1] == lng)");
+    eval(type
+      + "Popup[index] = popupa(lat, lng, type)");
+    eval(type
+      + "Color[index] = getColor()");
+    eval(type
+      + "Group.clearLayers()");
+    eval("for (let i = 0; i < " + type + "Array.length; i++) {draw" + type.charAt(0).toUpperCase() + type.slice(1) + "("
+      + type + "Array[i],"
+      + type + "Popup[i],"
+      + type + "Color[i])}");
+
+    // axios.put(`http://localhost:3000/update/${lat}&${lng}`, {
+    //   title: popupa(lat, lng, type),
+    //   color: getColor(),
+    // }).then((res) => {
+    //   console.log(res);
+    // });
+
+
+      
   }
 }
 function deleteMarker(event) {
@@ -313,9 +336,7 @@ function deleteMarker(event) {
     markerColor.splice(index, 1);
     // remove marker from database if there is any
 
-      axios.post("/deleteMarker", {
-        coordinates: [lat, lng],
-        }).then((res) => {
+      axios.delete(`/deleteMarker/${lat}&${lng}`).then((res) => {
           console.log(res);
         }).catch((err) => {
           console.log(err);

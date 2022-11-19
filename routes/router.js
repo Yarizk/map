@@ -35,19 +35,19 @@ router.route("/get").get((req, res) => {
         });
 });
 
-// router.route("/delete").delete((req, res) => {
-//     coordinate
-//         .deleteMany()
-//         .then((data) => {
-//             res.json(data);
-//         })
-//         .catch((error) => {
-//             res.json(error);
-//         });
-// });
+router.route("/delete").delete((req, res) => {
+    coordinate
+        .deleteMany()
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
 
-router.route("/deleteMarker").post((req, res) => {
-    coordinate.findOneAndDelete({ coordinates: [parseFloat(req.body.coordinates[0]), parseFloat(req.body.coordinates[1]) ] }).then((data) => {
+router.route("/deleteMarker/:lat&:lang").delete((req, res) => {
+    coordinate.findOneAndDelete({ coordinates: [parseFloat(req.params.lat), parseFloat(req.params.lang) ] }).then((data) => {
         res.json(data);
     }
     ).catch((error) => {
@@ -56,7 +56,7 @@ router.route("/deleteMarker").post((req, res) => {
     );
 });
 
-router.route("/update/:lat&:lang").put((req, res) => {
+router.route("/updateMarker/:lat&:lang").put((req, res) => {
 
     coordinate
         .findOneAndUpdate({ coordinates: [parseFloat(req.params.lat), parseFloat(req.params.lang) ] }, {
