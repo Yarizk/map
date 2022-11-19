@@ -53,6 +53,7 @@ function choose() {
       document.getElementById("color-picker").disabled = true;
     }
   }
+  console.log(rectangleArray);
 }
 
 var lineArray = [],
@@ -94,12 +95,6 @@ function pushData() {
         eval(ele[i].value + "Color.push(getColor())");
       }
     }
-  }
-  if (rectangle == true && rectangleArray.length != 0) {
-    rectanglePopup.push(
-      popupa(component._latlngs[0].lat, component._latlngs[0].lng, "rectangle")
-    );
-    rectangleColor.push(getColor());
   }
   component = undefined;
 }
@@ -215,10 +210,13 @@ map.on("click", async function (e) {
   } else if (rectangle == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     if (store[1] != undefined) {
+      popupTemp = popupa(e.latlng.lat, e.latlng.lng, "rectangle")
+      rectanglePopup.push(popupTemp);
       rectangleArray.push(store);
+      rectangleColor.push(getColor());
       drawRectangle(
         store,
-        popupa(e.latlng.lat, e.latlng.lng, "rectangle"),
+        popupTemp,
         getColor()
       );
       store = [];
@@ -309,8 +307,8 @@ function deleteMarker(event) {
         myIcon(markerColor[i])
       );
     }
-  } else {
-    console.log(rectangleArray)
+  } 
+  else {
     eval(
       "var index = " +
         type +
