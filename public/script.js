@@ -15,7 +15,9 @@ var bounds = [
 ];
 var image = L.imageOverlay("3.png", bounds).addTo(map);
 map.fitBounds(bounds);
-var layerGroup = L.layerGroup().addTo(map);
+var lineGroup = L.layerGroup().addTo(map);
+var polygonGroup = L.layerGroup().addTo(map);
+var rectangleGroup = L.layerGroup().addTo(map);
 var markerGroup = L.layerGroup().addTo(map);
 var handGroup = L.layerGroup().addTo(map);
 
@@ -69,24 +71,34 @@ var lineArray = [],
   (rectangleColor = []);
 
 var store = [];
-var hand, line, marker, polygon, rectangle, circle, component;
+var hand, line, marker, polygon, rectangle, circle, component, popupTemp;
 
 function pushData() {
-  if (component != undefined) {
-    component.bindPopup(popupa());
-  }
   var ele = document.getElementsByName("choose");
+  // if (component != undefined) {
+  //   component.bindPopup(
+  //     popupa(component._latlngs[0].lat, component._latlngs[0].lng, ele[0].value)
+  //   );
+  // }
   if (store.length != 0) {
     for (var i = 0; i < ele.length; i++) {
       if (window[ele[i].value] == true && ele[i].value != "marker") {
         eval(ele[i].value + "Array.push(store)");
-        eval(ele[i].value + "Popup.push(popupa())");
+        eval(
+          ele[i].value +
+            "Popup.push(popupTemp)"
+        )
+        
+        console.log(ele[i].value);
+        console.log(polygonPopup);
         eval(ele[i].value + "Color.push(getColor())");
       }
     }
   }
   if (rectangle == true && rectangleArray.length != 0) {
-    rectanglePopup.push(popupa());
+    rectanglePopup.push(
+      popupa(component._latlngs[0].lat, component._latlngs[0].lng, "rectangle")
+    );
     rectangleColor.push(getColor());
   }
   component = undefined;
@@ -106,7 +118,9 @@ function resetInput() {
 function reset() {
   resetInput();
   markerGroup.clearLayers();
-  layerGroup.clearLayers();
+  lineGroup.clearLayers();
+  polygonGroup.clearLayers();
+  rectangleGroup.clearLayers();
   clear();
 }
 function clear() {
@@ -177,26 +191,36 @@ map.on("click", async function (e) {
       .addTo(handGroup);
   } else if (line == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawLine(store, popupa(e.latlng.lat, e.latlng.lng), getColor());
+    popupTemp = popupa(e.latlng.lat, e.latlng.lng, "line")
+    drawLine(store, popupa(e.latlng.lat, e.latlng.lng, "line"), getColor());
   } else if (marker == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     markerArray.push([e.latlng.lat, e.latlng.lng]);
-    markerPopup.push(popupa(e.latlng.lat, e.latlng.lng));
+    markerPopup.push(popupa(e.latlng.lat, e.latlng.lng, "marker"));
     markerColor.push(document.getElementsByClassName("default")[0].src);
     addMarker(
       e.latlng.lat,
       e.latlng.lng,
-      popupa(e.latlng.lat, e.latlng.lng),
+      popupa(e.latlng.lat, e.latlng.lng, "marker"),
       myIcon(document.getElementsByClassName("default")[0].src)
     );
   } else if (polygon == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
-    drawPolygon(store, popupa(e.latlng.lat, e.latlng.lng), getColor());
+    popupTemp = popupa(e.latlng.lat, e.latlng.lng, "polygon")
+    drawPolygon(
+      store,
+      popupTemp,
+      getColor()
+    );
   } else if (rectangle == true) {
     store.push([e.latlng.lat, e.latlng.lng]);
     if (store[1] != undefined) {
       rectangleArray.push(store);
-      drawRectangle(store, popupa(e.latlng.lat, e.latlng.lng), getColor());
+      drawRectangle(
+        store,
+        popupa(e.latlng.lat, e.latlng.lng, "rectangle"),
+        getColor()
+      );
       store = [];
     }
   }
@@ -221,28 +245,61 @@ function myIcon(marker) {
   return icon;
 }
 
-function popupa(lat,long) {
+function popupa(lat, long, type) {
   var popupTitle = document.getElementById("inputtitle");
   var popupDescription = document.getElementById("inputDescription");
   return `
   <div>
-    <h4>${popupTitle.value}</h4>
-    <p>${popupDescription.value}</p>
-    //add edit delete button
-    <button class="btn btn-primary" id="${lat} ${long}" onclick="editMarker(event)">Edit</button>
-    <button class="btn btn-danger" id="${lat} ${long}" onclick="deleteMarker(event)">Delete</button>
+    <h4 class="p-2">${popupTitle.value}</h4>
+    <p class="p-1 m-0">${popupDescription.value}</p>
+    <button class="btn btn-primary btn-sm m-1 p-1 me-0" id="${lat} ${long} ${type}" onclick="editMarker(event)">
+    <i class="bi bi-pencil" id="${lat} ${long} ${type}" ></i>
+    </button>
+    <button class="btn btn-danger btn-sm m-1 p-1" id="${lat} ${long} ${type}" onclick="deleteMarker(event)">
+    <i class="bi bi-trash3-fill" id="${lat} ${long} ${type}" ></i>
+    </button>
   <div/>`;
 }
 
-function editMarker(event){
+function editMarker(event) {
   //edit marker
   var latlong = event.target.id.split(" ");
   var lat = latlong[0];
   var lng = latlong[1];
-  //find index of lat lang
-  var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
-  if (markerArray[i] != undefined) {
-    markerPopup[i] = popupa(lat,lng);
+  var type = latlong[2];
+  if (type == "marker") {
+    //find index of lat lang
+    var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
+    if (markerArray[i] != undefined) {
+      markerPopup[i] = popupa(lat, lng, "marker");
+      markerGroup.clearLayers();
+      for (let i = 0; i < markerArray.length; i++) {
+        addMarker(
+          markerArray[i][0],
+          markerArray[i][1],
+          markerPopup[i],
+          myIcon(markerColor[i])
+        );
+      }
+    }
+  }
+}
+function deleteMarker(event) {
+  //getlatlong
+  var latlong = event.target.id.split(" ");
+  var lat = latlong[0];
+  var lng = latlong[1];
+  var type = latlong[2];
+  if (type == "marker") {
+    //find index of lat lang
+    var index = markerArray.findIndex(
+      (item) => item[0] == lat && item[1] == lng
+    );
+    //remove marker from array
+    markerArray.splice(index, 1);
+    markerPopup.splice(index, 1);
+    markerColor.splice(index, 1);
+    //remove marker from map
     markerGroup.clearLayers();
     for (let i = 0; i < markerArray.length; i++) {
       addMarker(
@@ -252,32 +309,24 @@ function editMarker(event){
         myIcon(markerColor[i])
       );
     }
-  }
-}
-function deleteMarker(event){
-  //getlatlong
-  var latlong = event.target.id.split(" ");
-  var lat = latlong[0];
-  var lng = latlong[1];
-  //find index of lat lang
-  var index = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
-  //remove marker from array
-  markerArray.splice(index, 1);
-  markerPopup.splice(index, 1);
-  markerColor.splice(index, 1);
-  //remove marker from map
-  markerGroup.clearLayers();
-  for (let i = 0; i < markerArray.length; i++) {
-    addMarker(
-      markerArray[i][0],
-      markerArray[i][1],
-      markerPopup[i],
-      myIcon(markerColor[i])
+  } else {
+    console.log(rectangleArray)
+    eval(
+      "var index = " +
+        type +
+        "Array.findIndex((item) => item[item.length-1][0] == lat && item[item.length-1][1] == lng)"
     );
+    eval(type + "Array.splice(index, 1)");
+    eval(type + "Popup.splice(index, 1)");
+    eval(type + "Color.splice(index, 1)");
+    eval(type + "Group.clearLayers()");
+    for (let i = 0; i < eval(type + "Array.length"); i++) {
+      eval(
+        "draw" + type.charAt(0).toUpperCase() + type.slice(1) +"(" +type +"Array[i], " +type +"Popup[i], " +type +"Color[i])"
+      );
+    }
   }
 }
-
-
 
 function getColor() {
   var color = document.getElementById("color-picker").value;
@@ -288,21 +337,25 @@ function getColor() {
 }
 
 function addMarker(lat, long, popup, icon) {
-  component = L.marker([lat, long], {  icon: icon }).bindPopup(popup).addTo(map).on("click", function (e) {
-    map.panTo(e.latlng);});
+  component = L.marker([lat, long], { icon: icon })
+    .bindPopup(popup)
+    .addTo(map)
+    .on("click", function (e) {
+      map.panTo(e.latlng);
+    });
   component.addTo(markerGroup);
 }
 function drawLine(array, popup, color) {
   component = L.polyline(array, { color: color }).bindPopup(popup).addTo(map);
-  component.addTo(layerGroup);
+  component.addTo(lineGroup);
 }
 function drawPolygon(array, popup, color) {
   component = L.polygon(array, { color: color }).bindPopup(popup).addTo(map);
-  component.addTo(layerGroup);
+  component.addTo(polygonGroup);
 }
 function drawRectangle(array, popup, color) {
   component = L.rectangle(array, { color: color }).bindPopup(popup).addTo(map);
-  component.addTo(layerGroup);
+  component.addTo(rectangleGroup);
 }
 
 for (
@@ -395,7 +448,7 @@ function saveComponent() {
       .then((res) => {
         console.log("line succes" + res);
       })
-      .catch((err) =>  unathorizedPost(err));
+      .catch((err) => unathorizedPost(err));
   }
   for (var i = 0; i < polygonArray.length; i++) {
     var payload = {
@@ -423,13 +476,21 @@ function saveComponent() {
       .then((res) => {
         console.log("rectangle succes" + res);
       })
-      .catch((err) => {throw unathorizedPost(err)});
+      .catch((err) => {
+        throw unathorizedPost(err);
+      });
   }
 
-  if(!markerArray.length && !lineArray.length && !polygonArray.length && !rectangleArray.length){
+  if (
+    !markerArray.length &&
+    !lineArray.length &&
+    !polygonArray.length &&
+    !rectangleArray.length
+  ) {
     document.getElementsByClassName("warning")[0].textContent =
-    "No data to save";
-}}
+      "No data to save";
+  }
+}
 
 function unathorizedPost(err) {
   console.log(err);
