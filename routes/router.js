@@ -28,33 +28,33 @@ router.route("/get").get((req, res) => {
         .find()
         .then((data) => {
             res.json(data);
-            console.log(data)
+            // console.log(data)
         })
         .catch((error) => {
             res.json(error);
         });
 });
 
-router.route("/delete").delete((req, res) => {
-    coordinate
-        .deleteMany()
-        .then((data) => {
-            res.json(data);
-        })
-        .catch((error) => {
-            res.json(error);
-        });
-});
+// router.route("/delete").delete((req, res) => {
+//     coordinate
+//         .deleteMany()
+//         .then((data) => {
+//             res.json(data);
+//         })
+//         .catch((error) => {
+//             res.json(error);
+//         });
+// });
 
-router.route("delete/:id").delete((req, res) => {
-    coordinate
-        .deleteOne({_id: req.params.id})
-        .then((data) => {
-            res.json(data);
-        })
-        .catch((error) => {
-            res.json(error);
-        });
+router.route("/deleteMarker").post((req, res) => {
+    console.log(req.body.coordinates);
+    coordinate.findOneAndDelete({ coordinates: [parseFloat(req.body.coordinates[0]), parseFloat(req.body.coordinates[1]) ] }).then((data) => {
+        res.json(data);
+    }
+    ).catch((error) => {
+        res.json(error);
+    }
+    );
 });
 
 router.route("/update/:id").put((req, res) => {

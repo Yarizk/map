@@ -288,6 +288,7 @@ function deleteMarker(event) {
   var lat = latlong[0];
   var lng = latlong[1];
   var type = latlong[2];
+  var id = latlong[3];
   if (type == "marker") {
     //find index of lat lang
     var index = markerArray.findIndex(
@@ -297,6 +298,19 @@ function deleteMarker(event) {
     markerArray.splice(index, 1);
     markerPopup.splice(index, 1);
     markerColor.splice(index, 1);
+    // remove marker from database if there is any
+
+      axios.post("/deleteMarker", {
+        coordinates: [lat, lng],
+        }).then((res) => {
+          console.log(res);
+        }).catch((err) => {
+          console.log(err);
+        });
+        ;
+
+
+    
     //remove marker from map
     markerGroup.clearLayers();
     for (let i = 0; i < markerArray.length; i++) {
