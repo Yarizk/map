@@ -35,9 +35,20 @@ router.route("/get").get((req, res) => {
         });
 });
 
-router.route("/delete").delete((req, res) => {
+router.route("/deleteAll").delete((req, res) => {
     coordinate
         .deleteMany()
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
+
+router.route("/delete/:lat&:lng").delete((req, res) => {
+    coordinate
+        .deleteOne({ lat: req.params.lat, lng: req.params.lng })
         .then((data) => {
             res.json(data);
         })
@@ -57,7 +68,22 @@ router.route("/deleteMarker/:lat&:lang").delete((req, res) => {
 });
 
 router.route("/updateMarker/:lat&:lang").put((req, res) => {
+    coordinate
+        .findOneAndUpdate({ coordinates: [parseFloat(req.params.lat), parseFloat(req.params.lang) ] }, {
+        $set: {
+            color: req.body.color,
+            popup: req.body.popup,
+        }
+    })
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+});
 
+router.route("/update/:lat&:lang").put((req, res) => {
     coordinate
         .findOneAndUpdate({ coordinates: [parseFloat(req.params.lat), parseFloat(req.params.lang) ] }, {
         $set: {
