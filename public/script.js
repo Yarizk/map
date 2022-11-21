@@ -259,7 +259,7 @@ function popupa(lat, long, type, edit) {
   <div>
     <h4 class="p-2">${popupTitle.value}</h4>
     <p class="p-1 m-0">${popupDescription.value}</p>
-    <a href="#headingTwo">
+    <a href="#update">
     <button class="btn btn-primary btn-sm m-1 p-1 me-0" id="${lat} ${long} ${type}"  onclick="saveEvent(event)"> 
     <i class="bi bi-pencil" id="${lat} ${long} ${type}" ></i>
     </button>
@@ -272,13 +272,27 @@ function popupa(lat, long, type, edit) {
 }
 
 function saveEvent(event){
+  document.getElementById("collapseOne").classList.remove("show");
+  document.getElementById("collapseTwo").classList.add("show");
+  console.log(event)
   var latlong = event.target.id.split(" ");
   latEvent = latlong[0];
   longEvent= latlong[1];
   typeEvent= latlong[2];
+
   document.getElementById("eventLat").value = latEvent;
   document.getElementById("eventLng").value = longEvent;
   document.getElementById("eventType").value = typeEvent.toUpperCase();
+  if(typeEvent == "marker"){
+    var i = markerArray.findIndex((item) => item[0] == latEvent && item[1] == longEvent);
+
+    document.getElementById("color-picker-edit").disabled = true;
+    document.getElementsByClassName("choose-marker")[1].disabled = false;
+    document.getElementsByClassName("default-edit")[0].src = markerColor[i];
+  } else {
+    document.getElementById("color-picker-edit").disabled = false;
+    document.getElementsByClassName("choose-marker")[1].disabled = true;
+  }
 }
 
 function editMarker() {
@@ -289,12 +303,13 @@ function editMarker() {
   console.log([lat, lng]);
   var type = typeEvent;
   if (type == "marker") {
+    
     //find index of lat lang
     var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
     console.log(i);
     if (markerArray[i] != undefined) {
       markerPopup[i] = popupa(lat, lng, "marker", "edit");
-      markerColor[i] = document.getElementsByClassName("default")[0].src;
+      markerColor[i] = document.getElementsByClassName("default-edit")[0].src;
       markerGroup.clearLayers();
       for (let i = 0; i < markerArray.length; i++) {
         addMarker(
@@ -307,14 +322,14 @@ function editMarker() {
 
       axios.put(`http://localhost:3000/updateMarker/${lat}&${lng}`, {  
         popup: popupa(lat, lng, "marker"),
-        color: document.getElementsByClassName("default")[0].src,
+        color: document.getElementsByClassName("default-edit")[0].src,
       }).then((res) => {
         console.log(res);
       });
     
 
-      document.getElementById("inputtitle").value = "";
-      document.getElementById("inputDescription").value = "";
+      document.getElementById("edittitle").value = "";
+      document.getElementById("editDescription").value = "";
 
     }
   }
@@ -323,7 +338,7 @@ function editMarker() {
     eval(type
       + "Popup[index] = popupa(lat, lng, type, 'edit')");
     eval(type
-      + "Color[index] = getColor()");
+      + "Color[index] = getColor('edit')");
     eval(type
       + "Group.clearLayers()");
     eval("for (let i = 0; i < " + type + "Array.length; i++) {draw" + type.charAt(0).toUpperCase() + type.slice(1) + "("
@@ -409,8 +424,12 @@ function deleteMarker(event) {
   }
 }
 
-function getColor() {
-  var color = document.getElementById("color-picker").value;
+function getColor(edit) {
+  if(edit == undefined){
+    var color = document.getElementById("color-picker").value;}
+  else{
+    var color = document.getElementById("color-picker-edit").value;
+  }
   if (color == "") {
     color = "red";
   }
@@ -449,6 +468,18 @@ for (
     [i].addEventListener("click", function (item) {
       console.log(item.target.src);
       document.getElementsByClassName("default")[0].src = item.target.src;
+    });
+}
+for (
+  var i = 0;
+  i < document.getElementsByClassName("icon-marker-edit").length;
+  i++
+) {
+  document
+    .getElementsByClassName("icon-marker-edit")
+    [i].addEventListener("click", function (item) {
+      console.log(item.target.src);
+      document.getElementsByClassName("default-edit")[0].src = item.target.src;
     });
 }
 

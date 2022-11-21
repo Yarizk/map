@@ -55,9 +55,14 @@ html{scroll-behavior:smooth}
 .icon-marker{
     width:1.5rem;
 }
+.icon-marker-edit{
+    width:1.5rem;
+}
 .default{
     width:1.5rem;
-
+}
+.default-edit{
+    width:1.5rem;
 }
 .choose-marker:disabled{
     background-color: #dadcdd !important;
@@ -106,6 +111,7 @@ html{scroll-behavior:smooth}
     text-align: center;
 }
 .update{
+    margin-top: 3rem!important;
     margin-left: auto!important;
-    margin-right: 2rem!important;
+    margin-right: 0rem!important;
 }
