@@ -282,7 +282,7 @@ function editMarker(event) {
       }
 
       axios.put(`http://localhost:3000/updateMarker/${lat}&${lng}`, {  
-        title: popupa(lat, lng, "marker"),
+        popup: popupa(lat, lng, "marker"),
         color: document.getElementsByClassName("default")[0].src,
       }).then((res) => {
         console.log(res);
@@ -306,13 +306,13 @@ function editMarker(event) {
       + type + "Array[i],"
       + type + "Popup[i],"
       + type + "Color[i])}");
-
-    // axios.put(`http://localhost:3000/update/${lat}&${lng}`, {
-    //   title: popupa(lat, lng, type),
-    //   color: getColor(),
-    // }).then((res) => {
-    //   console.log(res);
-    // });
+    console.log(eval(type + "Array[index]"));
+    axios.put(`http://localhost:3000/update/${eval(type+"Array[index]")}`, {
+      popup: popupa(lat, lng, type),
+      color: getColor(),
+    }).then((res) => {
+      console.log(res);
+    });
 
 
       
@@ -439,15 +439,24 @@ async function get() {
       }
     }
     if (data[j].type == "line") {
+      lineArray.push(data[j].coordinates);
+      linePopup.push(data[j].popup);
+      lineColor.push(data[j].color);
       drawLine(data[j].coordinates, data[j].popup, data[j].color);
     }
     if (data[j].type == "polygon") {
+      polygonArray.push(data[j].coordinates);
+      polygonPopup.push(data[j].popup);
+      polygonColor.push(data[j].color);
       drawPolygon(data[j].coordinates, data[j].popup, data[j].color);
     }
     if (data[j].type == "rectangle") {
       if (data[j].coordinates == undefined) {
         continue;
       } else {
+        rectangleArray.push(data[j].coordinates);
+        rectanglePopup.push(data[j].popup);
+        rectangleColor.push(data[j].color);
         drawRectangle(data[j].coordinates, data[j].popup, data[j].color);
       }
     }

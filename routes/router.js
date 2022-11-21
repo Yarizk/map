@@ -83,15 +83,22 @@ router.route("/updateMarker/:lat&:lang").put((req, res) => {
         });
 });
 
-router.route("/update/:lat&:lang").put((req, res) => {
+router.route("/update/:coordinate").put((req, res) => {
+    let store = [];
+    let arr = req.params.coordinate.split(",");
+    for (let i = 0; i < arr.length; i+=2) {
+        store.push([parseFloat(arr[i]), parseFloat(arr[i + 1])]);
+    }
+    console.log(store);
     coordinate
-        .findOneAndUpdate({ coordinates: [parseFloat(req.params.lat), parseFloat(req.params.lang) ] }, {
+        .findOneAndUpdate({ coordinates: store }, {
         $set: {
             color: req.body.color,
             popup: req.body.popup,
         }
     })
         .then((data) => {
+            console.log(",asi");
             res.json(data);
         })
         .catch((error) => {
