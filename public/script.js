@@ -65,14 +65,18 @@ var lineArray = [],
   markerPopup = [],
   linePopup = [],
   polygonPopup = [],
-  rectanglePopup = [];
-(markerColor = []),
-  (lineColor = []),
-  (polygonColor = []),
-  (rectangleColor = []);
+  rectanglePopup = [],
+  markerColor = [],
+  lineColor = [],
+  polygonColor = [],
+  rectangleColor = [],
+  markerDB = [],
+  lineDB = [],
+  polygonDB = [],
+  rectangleDB = [];
 
 var store = [];
-var hand, line, marker, polygon, rectangle, circle, component, popupTemp;
+var hand, line, marker, polygon, rectangle, circle, component, popupTemp, latEvent, longEvent, typeEvent;
 
 function pushData() {
   var ele = document.getElementsByName("choose");
@@ -243,33 +247,53 @@ function myIcon(marker) {
   return icon;
 }
 
-function popupa(lat, long, type) {
+function popupa(lat, long, type, edit) {
+  if (edit == undefined) {
   var popupTitle = document.getElementById("inputtitle");
   var popupDescription = document.getElementById("inputDescription");
+  } else {
+    var popupTitle = document.getElementById("edittitle");
+    var popupDescription = document.getElementById("editDescription");
+  }
   return `
   <div>
     <h4 class="p-2">${popupTitle.value}</h4>
     <p class="p-1 m-0">${popupDescription.value}</p>
-    <button class="btn btn-primary btn-sm m-1 p-1 me-0" id="${lat} ${long} ${type}" onclick="editMarker(event)">
+    <a href="#headingTwo">
+    <button class="btn btn-primary btn-sm m-1 p-1 me-0" id="${lat} ${long} ${type}"  onclick="saveEvent(event)"> 
     <i class="bi bi-pencil" id="${lat} ${long} ${type}" ></i>
     </button>
+    </a>
     <button class="btn btn-danger btn-sm m-1 p-1" id="${lat} ${long} ${type}" onclick="deleteMarker(event)">
     <i class="bi bi-trash3-fill" id="${lat} ${long} ${type}" ></i>
     </button>
+    
   <div/>`;
 }
 
-function editMarker(event) {
-  //edit marker
+function saveEvent(event){
   var latlong = event.target.id.split(" ");
-  var lat = latlong[0];
-  var lng = latlong[1];
-  var type = latlong[2];
+  latEvent = latlong[0];
+  longEvent= latlong[1];
+  typeEvent= latlong[2];
+  document.getElementById("eventLat").value = latEvent;
+  document.getElementById("eventLng").value = longEvent;
+  document.getElementById("eventType").value = typeEvent.toUpperCase();
+}
+
+function editMarker() {
+  //edit marker
+  console.log(markerArray);
+  var lat = parseFloat(latEvent);
+  var lng = parseFloat(longEvent);
+  console.log([lat, lng]);
+  var type = typeEvent;
   if (type == "marker") {
     //find index of lat lang
     var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
+    console.log(i);
     if (markerArray[i] != undefined) {
-      markerPopup[i] = popupa(lat, lng, "marker");
+      markerPopup[i] = popupa(lat, lng, "marker", "edit");
       markerColor[i] = document.getElementsByClassName("default")[0].src;
       markerGroup.clearLayers();
       for (let i = 0; i < markerArray.length; i++) {
@@ -297,7 +321,7 @@ function editMarker(event) {
   else  {
     eval("var index = " + type + "Array.findIndex((item) => item[item.length-1][0] == lat && item[item.length-1][1] == lng)");
     eval(type
-      + "Popup[index] = popupa(lat, lng, type)");
+      + "Popup[index] = popupa(lat, lng, type, 'edit')");
     eval(type
       + "Color[index] = getColor()");
     eval(type
@@ -438,6 +462,7 @@ async function get() {
   for (let j = 0; j < data.length; j++) {
     if (data[j].type == "marker") {
       if (data[j].popup[i] != null) {
+        markerDB.push(data[j].coordinates);
         markerArray.push(data[j].coordinates);
         markerPopup.push(data[j].popup);
         markerColor.push(data[j].color);
@@ -447,17 +472,17 @@ async function get() {
           data[j].popup,
           myIcon(data[j].color)
         );
-      } else {
-        L.marker(data[j].coordinates, { icon: myIcon() }).addTo(markerGroup);
-      }
+      } else{ continue;}
     }
     if (data[j].type == "line") {
+      lineDB.push(data[j].coordinates);
       lineArray.push(data[j].coordinates);
       linePopup.push(data[j].popup);
       lineColor.push(data[j].color);
       drawLine(data[j].coordinates, data[j].popup, data[j].color);
     }
     if (data[j].type == "polygon") {
+      polygonDB.push(data[j].coordinates);
       polygonArray.push(data[j].coordinates);
       polygonPopup.push(data[j].popup);
       polygonColor.push(data[j].color);
@@ -467,6 +492,7 @@ async function get() {
       if (data[j].coordinates == undefined) {
         continue;
       } else {
+        rectangleDB.push(data[j].coordinates);
         rectangleArray.push(data[j].coordinates);
         rectanglePopup.push(data[j].popup);
         rectangleColor.push(data[j].color);
@@ -486,7 +512,10 @@ function save() {
   s != undefined ? document.getElementsByClassName("warning")[0].textContent = "No data to save" : document.getElementsByClassName("warning")[0].textContent = "Data saved successfully";
 }
 
+
+
 function saveComponent() {
+
   for (var i = 0; i < markerArray.length; i++) {
     var payload = {
       type: "marker",
