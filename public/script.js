@@ -360,6 +360,17 @@ function deleteMarker(event) {
         type +
         "Array.findIndex((item) => item[item.length-1][0] == lat && item[item.length-1][1] == lng)"
     );
+
+    axios.delete(`/delete/${
+      eval
+      (type + "Array[index]")
+    }`).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    }
+    );
+
     eval(type + "Array.splice(index, 1)");
     eval(type + "Popup.splice(index, 1)");
     eval(type + "Color.splice(index, 1)");
@@ -369,6 +380,8 @@ function deleteMarker(event) {
         "draw" + type.charAt(0).toUpperCase() + type.slice(1) +"(" +type +"Array[i], " +type +"Popup[i], " +type +"Color[i])"
       );
     }
+
+
   }
 }
 

@@ -46,9 +46,14 @@ router.route("/deleteAll").delete((req, res) => {
         });
 });
 
-router.route("/delete/:lat&:lng").delete((req, res) => {
+router.route("/delete/:coordinate").delete((req, res) => {
+    let store = [];
+    let arr = req.params.coordinate.split(",");
+    for (let i = 0; i < arr.length; i+=2) {
+        store.push([parseFloat(arr[i]), parseFloat(arr[i + 1])]);
+    }
     coordinate
-        .deleteOne({ lat: req.params.lat, lng: req.params.lng })
+        .deleteOne({ coordinates : store })
         .then((data) => {
             res.json(data);
         })
@@ -89,7 +94,6 @@ router.route("/update/:coordinate").put((req, res) => {
     for (let i = 0; i < arr.length; i+=2) {
         store.push([parseFloat(arr[i]), parseFloat(arr[i + 1])]);
     }
-    console.log(store);
     coordinate
         .findOneAndUpdate({ coordinates: store }, {
         $set: {
