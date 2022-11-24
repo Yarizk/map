@@ -8,7 +8,7 @@ function register() {
       password: password,
     };
     axios
-      .post("http://localhost:3000/register", data)
+      .post("/register", data)
       .then((res) => {
         if(res.data == "User already exists"){
             document.getElementById("warning").innerHTML = "user already exists"}
@@ -35,7 +35,7 @@ function register() {
     };
     //console.log(data);
     axios
-      .post("http://localhost:3000/login", data)
+      .post("/login", data)
       .then((res) => {
         if(res.data == "Email does not exist"){
             document.getElementById("warning").innerHTML = "User not found"}
