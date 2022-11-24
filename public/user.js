@@ -33,7 +33,7 @@ function register() {
       email: email,
       password: password,
     };
-    console.log(data);
+    //console.log(data);
     axios
       .post("http://localhost:3000/login", data)
       .then((res) => {

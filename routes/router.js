@@ -19,7 +19,7 @@ router.route("/map").get((req, res) => {
 // save data after authentication
 router.route("/save" ).post(checkAuth,(req, res) => {
     const coordinates = new coordinate(req.body);
-    console.log(coordinates);
+    //console.log(coordinates);
     coordinates
         .save()
         .then((data) => {
@@ -110,7 +110,8 @@ router.route("/update/:coordinate").put((req, res) => {
         }
     })
         .then((data) => {
-            console.log(",asi");
+            
+            
             res.json(data);
         })
         .catch((error) => {

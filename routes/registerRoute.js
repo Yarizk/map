@@ -76,7 +76,7 @@ router.route("/login").post((req, res) => {
             };
             const token = jwt.sign({ payload }, process.env.SECRET, {expiresIn : "1h"});
             res.cookie("jwt", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-            console.log(token)
+            // console.log(token)
             res.redirect("/map");
 
           

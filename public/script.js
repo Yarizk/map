@@ -53,7 +53,7 @@ function choose() {
       document.getElementById("color-picker").disabled = true;
     }
   }
-  console.log(rectangleArray);
+  //console.log(rectangleArray);
 }
 
 var lineArray = [],
@@ -94,8 +94,8 @@ function pushData() {
             "Popup.push(popupTemp)"
         )
         
-        console.log(ele[i].value);
-        console.log(polygonPopup);
+        //console.log(ele[i].value);
+        //console.log(polygonPopup);
         eval(ele[i].value + "Color.push(getColor())");
       }
     }
@@ -274,7 +274,7 @@ function popupa(lat, long, type, edit) {
 function saveEvent(event){
   document.getElementById("collapseOne").classList.remove("show");
   document.getElementById("collapseTwo").classList.add("show");
-  console.log(event)
+  //console.log(event)
   var latlong = event.target.id.split(" ");
   latEvent = latlong[0];
   longEvent= latlong[1];
@@ -297,16 +297,16 @@ function saveEvent(event){
 
 function editMarker() {
   //edit marker
-  console.log(markerArray);
+  //console.log(markerArray);
   var lat = parseFloat(latEvent);
   var lng = parseFloat(longEvent);
-  console.log([lat, lng]);
+  //console.log([lat, lng]);
   var type = typeEvent;
   if (type == "marker") {
     
     //find index of lat lang
     var i = markerArray.findIndex((item) => item[0] == lat && item[1] == lng);
-    console.log(i);
+    //console.log(i);
     if (markerArray[i] != undefined) {
       markerPopup[i] = popupa(lat, lng, "marker", "edit");
       markerColor[i] = document.getElementsByClassName("default-edit")[0].src;
@@ -345,7 +345,7 @@ function editMarker() {
       + type + "Array[i],"
       + type + "Popup[i],"
       + type + "Color[i])}");
-    console.log(eval(type + "Array[index]"));
+    //console.log(eval(type + "Array[index]"));
     axios.put(`http://localhost:3000/update/${eval(type+"Array[index]")}`, {
       popup: popupa(lat, lng, type),
       color: getColor(),
@@ -466,7 +466,7 @@ for (
   document
     .getElementsByClassName("icon-marker")
     [i].addEventListener("click", function (item) {
-      console.log(item.target.src);
+      //console.log(item.target.src);
       document.getElementsByClassName("default")[0].src = item.target.src;
     });
 }
@@ -478,7 +478,7 @@ for (
   document
     .getElementsByClassName("icon-marker-edit")
     [i].addEventListener("click", function (item) {
-      console.log(item.target.src);
+      //console.log(item.target.src);
       document.getElementsByClassName("default-edit")[0].src = item.target.src;
     });
 }
@@ -557,7 +557,7 @@ function saveComponent() {
     axios
       .post("/save", payload)
       .then((res) => {
-        console.log("marker succes" + res);
+        //console.log("marker succes" + res);
       })
       .catch((err) => unathorizedPost(err));
   }
@@ -571,7 +571,7 @@ function saveComponent() {
     axios
       .post("/save", payload)
       .then((res) => {
-        console.log("line succes" + res);
+        //console.log("line succes" + res);
       })
       .catch((err) => unathorizedPost(err));
   }
@@ -585,7 +585,7 @@ function saveComponent() {
     axios
       .post("/save", payload)
       .then((res) => {
-        console.log("polygon succes" + res);
+        //console.log("polygon succes" + res);
       })
       .catch((err) => unathorizedPost(err));
   }
@@ -599,7 +599,7 @@ function saveComponent() {
     axios
       .post("/save", payload)
       .then((res) => {
-        console.log("rectangle succes" + res);
+        //console.log("rectangle succes" + res);
       })
       .catch((err) => {
         throw unathorizedPost(err);
@@ -617,7 +617,7 @@ function saveComponent() {
 }
 
 function unathorizedPost(err) {
-  console.log(err);
+  //console.log(err);
   document.getElementsByClassName("warning")[0].textContent =
     "You harus register to nyimpen data";
   const href = document.createElement("a");
