@@ -1,31 +1,60 @@
-<!DOCTYPE html>
+<%- include("./head.ejs") %> 
 <html lang="en">
-
+    <%- include("./head.ejs") %> 
+    <%- include("./nav.ejs") %> 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        html, body {
+            background-color: #333333!important;
+        }
+        .button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            width: 100%;
+        }
+        #button{
+            border-radius: 10px;
+            border-color: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
     <iframe frameborder="0" id="game" src="https://itch.io/embed-upload/6883122?color=333333" allowfullscreen=""
         width="960" height="620"><a href="https://kunrikkun.itch.io/spaceship-to-crux">Play Spaceship to Crux on
             itch.io</a></iframe>
-    <!-- add button after 10 second to go to map -->
-
+    <div class="button">
+        </div>
 </body>
 <script>
 
-    // button style
     
     setTimeout(function () {
-        var button = document.createElement("button");
-        button.innerHTML = "Go to Map";
-        button.onclick = function () {
+        var buttonMap = document.createElement("button");
+        var buttonPlay = document.createElement("button");
+        var buttonRestart = document.createElement("button");
+        buttonMap.setAttribute("id", "button");
+        buttonPlay.setAttribute("id", "button");
+        buttonPlay.innerHTML = "Play Again";
+        buttonMap.innerHTML = "Go to Map";
+        buttonMap.onclick = function () {
             window.location.href = "/map";
         }
-        document.body.appendChild(button);
+        buttonPlay.onclick = function () {
+            window.location.href = "/game";
+        }
+        document.getElementsByClassName("button")[0].appendChild(buttonMap);
+        document.getElementsByClassName("button")[0].appendChild(buttonPlay);
     }, 10000);
 
 
