@@ -4,6 +4,14 @@ const router = express.Router();
 const checkAuth = require("../middleware/check_auth");
 
 router.route("/").get((req, res) => {
+    res.render("home");
+});
+
+router.route("/game").get((req, res) => {
+    res.render("game");
+    });
+
+router.route("/map").get((req, res) => {
     res.render('map');
 });
 

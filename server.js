@@ -18,6 +18,7 @@ app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
+
 //connect to mongodb
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.on('connected', () => {
