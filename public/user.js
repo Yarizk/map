@@ -43,7 +43,7 @@ function register() {
             document.getElementById("warning").innerHTML = "Incorrect password"
           }
           else{
-            window.location.href = "/"
+            window.location.href = "/map"
           }
       })
       .catch((err) => {

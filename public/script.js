@@ -419,7 +419,7 @@ function deleteMarker(event) {
         "draw" + type.charAt(0).toUpperCase() + type.slice(1) +"(" +type +"Array[i], " +type +"Popup[i], " +type +"Color[i])"
       );
     }
-
+  
 
   }
 }
