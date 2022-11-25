@@ -75,6 +75,7 @@ router.route("/login").post((req, res) => {
               username: foundUser.username,
             };
             const token = jwt.sign({ payload }, process.env.SECRET, {expiresIn : "1h"});
+            res.cookie("username", foundUser.username);
             res.cookie("jwt", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
             // console.log(token)
             res.redirect("/map");
@@ -90,6 +91,13 @@ router.route("/login").post((req, res) => {
     }
   });
 });
+
+router.route("/logout").get((req, res) => {
+  res.clearCookie("username");
+  res.clearCookie("jwt");
+  res.redirect("/");
+});
+
 
 module.exports = router;
 

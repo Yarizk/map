@@ -19,3 +19,11 @@
       <a class="nav-link disabled" href="#">Disabled</a>
     </li> -->
   </ul>
+
+  <script>
+    if(document.cookie){
+      // change to logout
+      document.querySelector('.nav-link[href="/login"]').innerHTML = "Logout";
+      document.querySelector('.nav-link[href="/login"]').href = "/logout";
+    }
+  </script>

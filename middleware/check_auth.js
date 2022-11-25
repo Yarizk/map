@@ -14,6 +14,3 @@ try{
     }}
 
 
-
-// delete cookies
-// res.cookie("jwt", "", { maxAge: 1 });
