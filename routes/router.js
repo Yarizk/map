@@ -110,8 +110,6 @@ router.route("/update/:coordinate").put((req, res) => {
         }
     })
         .then((data) => {
-            
-            
             res.json(data);
         })
         .catch((error) => {

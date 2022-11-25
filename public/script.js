@@ -259,6 +259,7 @@ function popupa(lat, long, type, edit) {
   <div>
     <h4 class="p-2">${popupTitle.value}</h4>
     <p class="p-1 m-0">${popupDescription.value}</p>
+    <p class="p-1 m-0">By ${document.cookie.split(';')[0].split('=')[1] }</p>
     <a href="#update">
     <button class="btn btn-primary btn-sm m-1 p-1 me-0" id="${lat} ${long} ${type}"  onclick="saveEvent(event)"> 
     <i class="bi bi-pencil" id="${lat} ${long} ${type}" ></i>
