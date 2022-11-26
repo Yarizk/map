@@ -322,7 +322,7 @@ function editMarker() {
       }
 
       axios.put(`/updateMarker/${lat}&${lng}`, {  
-        popup: popupa(lat, lng, "marker"),
+        popup: popupa(lat, lng, "marker","edit"),
         color: document.getElementsByClassName("default-edit")[0].src,
       }).then((res) => {
         console.log(res);
@@ -348,7 +348,7 @@ function editMarker() {
       + type + "Color[i])}");
     //console.log(eval(type + "Array[index]"));
     axios.put(`/update/${eval(type+"Array[index]")}`, {
-      popup: popupa(lat, lng, type),
+      popup: popupa(lat, lng, type, "edit"),
       color: getColor(),
     }).then((res) => {
       console.log(res);
