@@ -349,7 +349,7 @@ function editMarker() {
     //console.log(eval(type + "Array[index]"));
     axios.put(`/update/${eval(type+"Array[index]")}`, {
       popup: popupa(lat, lng, type, "edit"),
-      color: getColor(),
+      color: getColor("edit"),
     }).then((res) => {
       console.log(res);
     });
